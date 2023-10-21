@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext, createContext } from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import "./App.css"
 
 function copyTouch({ identifier, pageX, pageY }) {
@@ -43,7 +43,7 @@ function matmul(X, Y) {
 
 const FRAME_TIME = 10;
 
-function Shape({ width, height, Vertices, Faces }) {
+function Shape({width, height, Vertices, Faces}) {
   const canvasRef = useRef(null);
 
   const glRef = useRef(0);
@@ -170,12 +170,7 @@ function Shape({ width, height, Vertices, Faces }) {
 
     var var_projection_matrix = gl.getUniformLocation(shaderProgram, "projection_matrix");
 
-    gl.uniformMatrix4fv(var_projection_matrix, false, new Float32Array([
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0.2,
-      0, 0, 0, 1.2,
-    ]));
+    gl.uniformMatrix4fv(var_projection_matrix, false, new Float32Array([]));
 
     glRef.current = gl;
     vertexBufferRef.current = vertexBuffer;
@@ -320,12 +315,8 @@ function Shape({ width, height, Vertices, Faces }) {
     });
   });
 
-  return (
-    <div className="shapeContainer" style={{ width:width, height:height }}>
-      <canvas className="shape" ref={canvasRef} width={width} height={height}></canvas>
-    </div>
-  );
-}
+  return <canvas className="shape" ref={canvasRef} width={width} height={height}></canvas>;
+};
 
 function Cube({width, height}) {
   const r = 1 / Math.sqrt(3);
@@ -494,7 +485,7 @@ function Icosahedron({width, height}) {
   );
 }
 
-function ShapeFactory({ shp, width, height }) {
+function ShapeFactory({shp, width, height}) {
   switch (shp) {
     case 0:
       return <Cube width={width} height={height} />
@@ -509,44 +500,12 @@ function ShapeFactory({ shp, width, height }) {
   }
 }
 
-const ShapeContext = createContext(0);
-
-function OptionMenu({ setShape }) {
-  return (
-    <div className="optionMenuContainer">
-
-      <h1> Platonic Solids </h1>
-
-      <input className="optionMenuButton" id="optionMenuButton" type="checkbox" />
-      <label className="optionMenuLabel" htmlFor="optionMenuButton">
-        <span className="material-symbols-outlined optionMenuButtonIcon">
-          menu
-        </span>
-      </label>
-
-      <ul className="optionMenu">
-        <li onClick={() => {setShape(0);}}> <p>Cube</p> </li>
-        <li onClick={() => {setShape(1);}}> <p>Tetrahedron</p> </li>
-        <li onClick={() => {setShape(2);}}> <p>Octahedron</p> </li>
-        <li onClick={() => {setShape(3);}}> <p>Dodecahedron</p> </li>
-        <li onClick={() => {setShape(4);}}> <p>Icosahedron</p> </li>
-      </ul>
-
-    </div>
-  );
-}
-
-const getSize = (width, height) => {
-  return (width > 900 ? Math.min(0.8 * width, height) : Math.min(width, 0.9 * height));
-}
-
 function App() {
-
-  const [size, setSize] = useState(getSize(window.innerWidth, window.innerHeight));
+  const [size, setSize] = useState(Math.min(window.innerWidth, window.innerHeight));
   const [currentShape, setCurrentShape] = useState(0);
 
   const handleResize = () => {
-    setSize(getSize(window.innerWidth, window.innerHeight));
+    setSize(Math.min(window.innerWidth, window.innerHeight));
   };
 
   useEffect(() => {
@@ -557,13 +516,25 @@ function App() {
   });
 
   return (
-    <>
-      <OptionMenu setShape={setCurrentShape} />
-      <div className="article">
-        <ShapeFactory shp={currentShape} width={size} height={size} />
-      </div>
-    </>
+    <div className="container">
+      <button onClick={() => {setCurrentShape((currentShape + 1) % 5);}}> Next </button>
+      <ShapeFactory shp={currentShape} width={size} height={size} />
+    </div>
   );
 }
+
+/*
+function App() {
+  return (
+    <div className="container">
+      <ShapeFactory shp={0} width={500} height={500} />
+      <ShapeFactory shp={1} width={500} height={500} />
+      <ShapeFactory shp={2} width={500} height={500} />
+      <ShapeFactory shp={3} width={500} height={500} />
+      <ShapeFactory shp={4} width={500} height={500} />
+    </div>
+  );
+}
+*/
 
 export default App;

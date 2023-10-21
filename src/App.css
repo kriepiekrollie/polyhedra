@@ -1,18 +1,147 @@
-.container {
-  background-color:white;
-  width:100vw;
-  height:100vh;
+body {
+    height : 100vh;
+    width : 100vw;
+    margin : 0;
+    padding : 0;
+    scrollbar-width : none;
+    -ms-overflow-style : none;
+    overflow-y : none;
 }
+
+body::-webkit-scrollbar {
+    display : none;
+}
+
+.optionMenuContainer {
+  position:inline;
+  float:left;
+
+  width:auto;
+  height:100vh;
+
+  left:0vw;
+  top:0vh;
+  background-color:#eeeeee;
+  text-align:center;
+}
+
+.optionMenuContainer h1 {
+  margin: 2vh 2vw;
+}
+
+.optionMenu {
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.optionMenu li {
+  left:0vw;
+
+  margin: 1vh 1vw;
+  border-radius:10px;
+
+  cursor:pointer;
+
+  font-size:1.5em;
+}
+
+.optionMenu li:hover {
+  background-color:#dddddd;
+}
+
+.optionMenu li p {
+  padding:0.5em;
+  margin:0;
+}
+
+.optionMenuButton {
+  display:none;
+}
+.optionMenuLabel {
+  display:none;
+}
+
+.article {
+  position:inline;
+
+  width:auto;
+  height:100vh;
+
+  left:20vw;
+  top:0vh;
+
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+
+  justify-content:center;
+  align-content:center;
+}
+
+.shapeContainer {
+  width:100%;
+  height:100%;
+}
+
 .shape {
   touch-action:None;
-  position:absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
+
 button {
   font-size:50px;
   padding:10px 40px;
   border-radius:0px;
   margin:20px;
+}
+
+@media screen and (max-width:900px) {
+  .optionMenuContainer {
+    width:100vw;
+    height:auto;
+
+    left:0vw;
+    top:0vh;
+    text-align:left;
+  }
+
+  .optionMenuContainer h1 {
+    display:inline-block;
+    float:left;
+    padding-left:20px;
+  }
+
+  .optionMenuLabel {
+    margin:26px;
+    display:inline-block;
+    float:right;
+  }
+
+  .optionMenu {
+    clear:both;
+    display:block;
+    float:left;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.3s ease-out;
+  }
+
+  .optionMenuButton:checked ~ .optionMenu {
+    max-height:1000px;
+    transition:max-height 0.3s ease-out;
+  }
+
+  .optionMenu li {
+    width:100vw;
+    padding:0;
+    margin:0;
+    border-radius:0;
+    text-align:right;
+  }
+
+  .article {
+    width:100vw;
+    height:auto;
+    left:0vw;
+  }
 }
