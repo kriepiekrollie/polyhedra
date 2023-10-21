@@ -54,7 +54,7 @@ function Shape({width, height, Vertices, Faces}) {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
 
-  const [dt, setDT] = useState(0);
+  const [dt, setDT] = useState(1);
   const [dx, setDX] = useState(0);
   const [dy, setDY] = useState(0);
 
@@ -69,7 +69,7 @@ function Shape({width, height, Vertices, Faces}) {
     const canvas = canvasRef.current;
 
     // Get the WebGL context from the canvas.
-    var gl = canvas.getContext('experimental-webgl', { Alpha:true });
+    var gl = canvas.getContext('webgl', { Alpha:true, antialias:true });
 
     var vertices = [];
     var normals = [];
@@ -120,7 +120,8 @@ function Shape({width, height, Vertices, Faces}) {
       "  gl_Position = rotation_matrix * vec4(vertex_pos, 1.0);" +
       "  vec4 light_dir = rotation_matrix * vec4(1.0, 0.0, 0.0, 1.0);" +
       "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -2.0, 3.0, 0.0))));" +
-      "  vColor = vec4(x * vec3(1.0, 0.2, 0.4), 1.0);" +
+      "  float y = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(2.0, 1.0, -1.0, 0.0))));" +
+      "  vColor = vec4(x, y, 1.0 - x, 0.8);" +
       "  gl_PointSize = 10.0;" +
       "}";
 
@@ -227,7 +228,7 @@ function Shape({width, height, Vertices, Faces}) {
 
     gl.uniformMatrix4fv(mat, false, rotationMatrix);
 
-    gl.clearColor(1.0, 1.0, 1.0, 0.0);
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.enable(gl.DEPTH_TEST);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -440,6 +441,7 @@ function ShapeFactory({shp, width, height}) {
   }
 }
 
+/*
 function App() {
   const [size, setSize] = useState(Math.min(window.innerWidth, window.innerHeight));
   const [currentShape, setCurrentShape] = useState(0);
@@ -459,6 +461,18 @@ function App() {
     <div className="container">
       <button onClick={() => {setCurrentShape((currentShape + 1) % 5);}}> Next </button>
       <ShapeFactory shp={currentShape} width={size} height={size} />
+    </div>
+  );
+}
+*/
+function App() {
+  return (
+    <div className="container">
+      <ShapeFactory shp={0} width={500} height={500} />
+      <ShapeFactory shp={1} width={500} height={500} />
+      <ShapeFactory shp={2} width={500} height={500} />
+      <ShapeFactory shp={3} width={500} height={500} />
+      <ShapeFactory shp={4} width={500} height={500} />
     </div>
   );
 }
