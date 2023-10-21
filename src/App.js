@@ -1,6 +1,10 @@
 import React, {useRef, useState, useEffect} from 'react';
 import "./App.css"
 
+function copyTouch({ identifier, pageX, pageY }) {
+  return { identifier, pageX, pageY };
+}
+
 function cross(p, q) {
   return { 
     x : p.y * q.z - p.z * q.y,
@@ -172,31 +176,32 @@ function Shape({width, height, Vertices, Faces}) {
 
   const handleTouchStart = (event) => {
     if (event.target == canvasRef.current && event.targetTouches.length > 0) {
+      event.preventDefault();
       setClicked(true);
-      setX(event.targetTouches[0].screenX);
-      setY(event.targetTouches[0].screenY);
-      setT(Date.now());
+      setX(event.targetTouches[0].clientX);
+      setY(event.targetTouches[0].clientY);
+      setT(event.timeStamp);
     }
   };
 
   const handleTouchMove = (event) => {
     if (clicked && event.target == canvasRef.current && event.targetTouches.length > 0) {
-      const now = Date.now();
+      event.preventDefault();
+      setDX(event.targetTouches[0].clientX - x);
+      setDY(event.targetTouches[0].clientY - y);
+      setDT(Math.max(1, event.timeStamp - t));
 
-      setDX(event.targetTouches[0].screenX - x);
-      setDY(event.targetTouches[0].screenY - y);
-      setDT(Math.max(1, now - t));
-
-      setX(event.targetTouches[0].screenX);
-      setY(event.targetTouches[0].screenY);
-      setT(now);
+      setX(event.targetTouches[0].clientX);
+      setY(event.targetTouches[0].clientY);
+      setT(event.timeStamp);
 
       updateRotation();
     }
   };
 
   const handleTouchEnd = (event) => {
-    if (event.target == canvasRef.current && event.targetTouches.length > 0) {
+    if (clicked && event.target == canvasRef.current) {
+      event.preventDefault();
       setClicked(false);
       setDX(dx / dt * FRAME_TIME);
       setDY(dy / dt * FRAME_TIME);
@@ -295,6 +300,12 @@ function Shape({width, height, Vertices, Faces}) {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchcancel', handleTouchEnd);
+
       clearInterval(interval);
     });
   });
