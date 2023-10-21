@@ -170,11 +170,47 @@ function Shape({width, height, Vertices, Faces}) {
     niRef.current = numIndices;
   }, []);
 
+  const handleTouchStart = (event) => {
+    if (event.target == canvasRef.current && event.targetTouches.length > 0) {
+      setClicked(true);
+      setX(event.targetTouches[0].screenX);
+      setY(event.targetTouches[0].screenY);
+      setT(Date.now());
+    }
+  };
+
+  const handleTouchMove = (event) => {
+    if (clicked && event.target == canvasRef.current && event.targetTouches.length > 0) {
+      const now = Date.now();
+
+      setDX(event.targetTouches[0].screenX - x);
+      setDY(event.targetTouches[0].screenY - y);
+      setDT(Math.max(1, now - t));
+
+      setX(event.targetTouches[0].screenX);
+      setY(event.targetTouches[0].screenY);
+      setT(now);
+
+      updateRotation();
+    }
+  };
+
+  const handleTouchEnd = (event) => {
+    if (event.target == canvasRef.current && event.targetTouches.length > 0) {
+      setClicked(false);
+      setDX(dx / dt * FRAME_TIME);
+      setDY(dy / dt * FRAME_TIME);
+      setDT(FRAME_TIME);
+    }
+  };
+
   const handleMouseDown = (event) => {
-    setClicked(true);
-    setX(event.clientX);
-    setY(event.clientY);
-    setT(Date.now());
+    if (event.target == canvasRef.current) {
+      setClicked(true);
+      setX(event.clientX);
+      setY(event.clientY);
+      setT(Date.now());
+    }
   };
 
   const handleMouseUp = (event) => {
@@ -238,8 +274,14 @@ function Shape({width, height, Vertices, Faces}) {
 
     glRef.current = gl;
 
+    window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('touchcancel', handleTouchEnd);
 
     const interval = setInterval(() => {
       if (!clicked) {
@@ -250,13 +292,14 @@ function Shape({width, height, Vertices, Faces}) {
     }, FRAME_TIME);
 
     return (() => {
+      window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
       clearInterval(interval);
     });
   });
 
-  return <canvas className="shape" ref={canvasRef} onMouseDownCapture={handleMouseDown} width={width} height={height}></canvas>;
+  return <canvas className="shape" ref={canvasRef} width={width} height={height}></canvas>;
 };
 
 function Cube({width, height}) {
@@ -441,7 +484,6 @@ function ShapeFactory({shp, width, height}) {
   }
 }
 
-/*
 function App() {
   const [size, setSize] = useState(Math.min(window.innerWidth, window.innerHeight));
   const [currentShape, setCurrentShape] = useState(0);
@@ -464,7 +506,8 @@ function App() {
     </div>
   );
 }
-*/
+
+/*
 function App() {
   return (
     <div className="container">
@@ -476,5 +519,6 @@ function App() {
     </div>
   );
 }
+*/
 
 export default App;
