@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/polyhedra/static/css/main.ff065a6f.css",
+    "main.js": "/polyhedra/static/js/main.41516f77.js",
+    "static/js/787.97401bd4.chunk.js": "/polyhedra/static/js/787.97401bd4.chunk.js",
+    "index.html": "/polyhedra/index.html",
+    "main.ff065a6f.css.map": "/polyhedra/static/css/main.ff065a6f.css.map",
+    "main.41516f77.js.map": "/polyhedra/static/js/main.41516f77.js.map",
+    "787.97401bd4.chunk.js.map": "/polyhedra/static/js/787.97401bd4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ff065a6f.css",
+    "static/js/main.41516f77.js"
+  ]
+}
