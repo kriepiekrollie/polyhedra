@@ -4,6 +4,7 @@
   height:100vh;
 }
 .shape {
+  touch-action:None;
   position:absolute;
   top: 50%;
   left: 50%;
