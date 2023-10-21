@@ -4,7 +4,7 @@ import "./App.css"
 function cross(p, q) {
   return { 
     x : p.y * q.z - p.z * q.y,
-    y : p.x * q.z - p.z * q.x,
+    y : p.z * q.x - p.x * q.z,
     z : p.x * q.y - p.y * q.x,
   };
 }
@@ -65,46 +65,15 @@ function Shape({width, height, Vertices, Faces}) {
     0.0, 0.0, 0.0, 1.0,
   ]);
 
-  /*
-  // Define the vertices
-  const vertices = [
-    -0.5,-0.5,-0.5, +0.5,-0.5,-0.5, +0.5,+0.5,-0.5, -0.5,+0.5,-0.5,
-    -0.5,-0.5,+0.5, +0.5,-0.5,+0.5, +0.5,+0.5,+0.5, -0.5,+0.5,+0.5,
-    -0.5,-0.5,-0.5, -0.5,+0.5,-0.5, -0.5,+0.5,+0.5, -0.5,-0.5,+0.5,
-    +0.5,-0.5,-0.5, +0.5,+0.5,-0.5, +0.5,+0.5,+0.5, +0.5,-0.5,+0.5,
-    -0.5,-0.5,-0.5, -0.5,-0.5,+0.5, +0.5,-0.5,+0.5, +0.5,-0.5,-0.5,
-    -0.5,+0.5,-0.5, -0.5,+0.5,+0.5, +0.5,+0.5,+0.5, +0.5,+0.5,-0.5, 
-  ];
-
-  const normals = [
-     0, 0,-1,  0, 0,-1,  0, 0,-1,  0, 0,-1,
-     0, 0,+1,  0, 0,+1,  0, 0,+1,  0, 0,+1,
-    -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
-    +1, 0, 0, +1, 0, 0, +1, 0, 0, +1, 0, 0,
-     0,-1, 0,  0,-1, 0,  0,-1, 0,  0,-1, 0,
-     0,+1, 0,  0,+1, 0,  0,+1, 0,  0,+1, 0,
-  ];
-
-  // Define the indices
-  const indices = [
-    0,1,2, 0,2,3, 4,5,6, 4,6,7,
-    8,9,10, 8,10,11, 12,13,14, 12,14,15,
-    16,17,18, 16,18,19, 20,21,22, 20,22,23 
-  ];
-  */
-
   useEffect(() => {
     const canvas = canvasRef.current;
 
     // Get the WebGL context from the canvas.
     var gl = canvas.getContext('experimental-webgl', { Alpha:true });
 
-    var vertices = [
-    ];
-    var normals = [
-    ];
-    var indices = [
-    ];
+    var vertices = [];
+    var normals = [];
+    var indices = [];
 
     var numIndices = 0;
     for (let i = 0; i < Faces.length; i++) {
@@ -141,6 +110,7 @@ function Shape({width, height, Vertices, Faces}) {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
     // Code for our vertex shader.
+    // I literally have no idea how to write these shaders properly.
     const vs_code = 
       "attribute vec3 vertex_pos;" +
       "attribute vec3 normal;" +
@@ -149,8 +119,8 @@ function Shape({width, height, Vertices, Faces}) {
       "void main(void) {" +
       "  gl_Position = rotation_matrix * vec4(vertex_pos, 1.0);" +
       "  vec4 light_dir = rotation_matrix * vec4(1.0, 0.0, 0.0, 1.0);" +
-      "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -1.0, 3.0, 0.0))));" +
-      "  vColor = vec4(x, 0.2 * x, 0.4 * x, 1.0);" +
+      "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -2.0, 3.0, 0.0))));" +
+      "  vColor = vec4(x * vec3(1.0, 0.2, 0.4), 1.0);" +
       "  gl_PointSize = 10.0;" +
       "}";
 
@@ -288,47 +258,207 @@ function Shape({width, height, Vertices, Faces}) {
   return <canvas className="shape" ref={canvasRef} onMouseDownCapture={handleMouseDown} width={width} height={height}></canvas>;
 };
 
-
 function Cube({width, height}) {
+  const r = 1 / Math.sqrt(3);
   const vertices = [
-    { x : 0.5, y : 0.5, z : 0.5},
-    { x :-0.5, y : 0.5, z : 0.5},
-    { x : 0.5, y :-0.5, z : 0.5},
-    { x : 0.5, y : 0.5, z :-0.5},
-    { x : 0.5, y :-0.5, z :-0.5},
-    { x :-0.5, y : 0.5, z :-0.5},
-    { x :-0.5, y :-0.5, z : 0.5},
-    { x :-0.5, y :-0.5, z :-0.5},
+    { x : r, y : r, z : r },
+    { x :-r, y : r, z : r },
+    { x : r, y :-r, z : r },
+    { x : r, y : r, z :-r },
+    { x : r, y :-r, z :-r },
+    { x :-r, y : r, z :-r },
+    { x :-r, y :-r, z : r },
+    { x :-r, y :-r, z :-r },
   ];
   const faces = [
     [0, 2, 6, 1],
     [3, 5, 7, 4],
     [0, 3, 4, 2],
     [1, 6, 7, 5],
-    [0, 3, 5, 1],
-    [2, 6, 7, 4],
+    [0, 1, 5, 3],
+    [2, 4, 7, 6],
   ];
   return (
       <Shape width={width} height={height} Vertices={vertices} Faces={faces} />
   );
 }
 
+function Tetrahedron({width, height}) {
+  const r = 1 / Math.sqrt(3);
+  const vertices = [
+    { x : r, y : r, z : r },
+    { x : r, y :-r, z :-r },
+    { x :-r, y : r, z :-r },
+    { x :-r, y :-r, z : r },
+  ];
+  const faces = [
+    [0, 2, 1],
+    [0, 1, 3],
+    [0, 3, 2],
+    [1, 2, 3],
+  ];
+  return (
+    <Shape width={width} height={height} Vertices={vertices} Faces={faces} />
+  );
+}
+
+function Octahedron({width, height}) {
+  const vertices = [
+    { x : 1, y : 0, z : 0 },
+    { x :-1, y : 0, z : 0 },
+    { x : 0, y : 1, z : 0 },
+    { x : 0, y :-1, z : 0 },
+    { x : 0, y : 0, z : 1 },
+    { x : 0, y : 0, z :-1 },
+  ]; 
+  const faces = [
+    [0, 5, 3],
+    [0, 3, 4],
+    [0, 4, 2],
+    [0, 2, 5],
+    [1, 3, 5],
+    [1, 4, 3],
+    [1, 2, 4],
+    [1, 5, 2],
+  ];
+  return (
+    <Shape width={width} height={height} Vertices={vertices} Faces={faces} />
+  );
+}
+
+function Dodecahedron({width, height}) {
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const r = 1 / Math.sqrt(3);
+  const p = phi * r
+  const q = r / phi;
+  const vertices = [
+    { x : r, y : r, z : r },
+    { x :-r, y : r, z : r },
+    { x : r, y :-r, z : r },
+    { x : r, y : r, z :-r },
+    { x : r, y :-r, z :-r },
+    { x :-r, y : r, z :-r },
+    { x :-r, y :-r, z : r },
+    { x :-r, y :-r, z :-r },
+
+    { x : 0, y : p, z : q },
+    { x : 0, y :-p, z : q },
+    { x : 0, y : p, z :-q },
+    { x : 0, y :-p, z :-q },
+
+    { x : q, y : 0, z : p },
+    { x : q, y : 0, z :-p },
+    { x :-q, y : 0, z : p },
+    { x :-q, y : 0, z :-p },
+
+    { x : p, y : q, z : 0 },
+    { x :-p, y : q, z : 0 },
+    { x : p, y :-q, z : 0 },
+    { x :-p, y :-q, z : 0 },
+  ];
+  const faces = [
+    [0, 16, 18, 2, 12],
+    [2, 18, 4, 11, 9],
+    [2, 9, 6, 14, 12],
+    [6, 9, 11, 7, 19],
+    [7, 11, 4, 13, 15],
+    [3, 13, 4, 18, 16],
+    [3, 10, 5, 15, 13],
+    [1, 17, 5, 10, 8],
+    [5, 17, 19, 7, 15],
+    [1, 8, 0, 12, 14],
+    [1, 14, 6, 19, 17],
+    [0, 8, 10, 3, 16],
+  ];
+  return (
+    <Shape width={width} height={height} Vertices={vertices} Faces={faces} />
+  );
+}
+
+function Icosahedron({width, height}) {
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const r = Math.sqrt(phi * phi + 1);
+  const p = phi / r;
+  const q = 1 / r;
+  const vertices = [
+    { x : 0, y : p, z : q },
+    { x : 0, y :-p, z : q },
+    { x : 0, y : p, z :-q },
+    { x : 0, y :-p, z :-q },
+
+    { x : q, y : 0, z : p },
+    { x : q, y : 0, z :-p },
+    { x :-q, y : 0, z : p },
+    { x :-q, y : 0, z :-p },
+    
+    { x : p, y : q, z : 0 },
+    { x :-p, y : q, z : 0 },
+    { x : p, y :-q, z : 0 },
+    { x :-p, y :-q, z : 0 },
+  ];
+  const faces = [
+    [0, 2, 8],
+    [0, 8, 4],
+    [0, 4, 6],
+    [0, 6, 9],
+    [0, 9, 2],
+
+    [2, 5, 8],
+    [10, 8, 5],
+    [8, 10, 4],
+    [10, 1, 4],
+    [4, 1, 6],
+    [1, 11, 6],
+    [6, 11, 9],
+    [11, 7, 9],
+    [9, 7, 2],
+    [2, 7, 5],
+
+    [3, 1, 10],
+    [3, 10, 5],
+    [3, 5, 7],
+    [3, 7, 11],
+    [3, 11, 1],
+  ];
+  return (
+    <Shape width={width} height={height} Vertices={vertices} Faces={faces} />
+  );
+}
+
+function ShapeFactory({shp, width, height}) {
+  switch (shp) {
+    case 0:
+      return <Cube width={width} height={height} />
+    case 1:
+      return <Tetrahedron width={width} height={height} />
+    case 2:
+      return <Octahedron width={width} height={height} />
+    case 3:
+      return <Dodecahedron width={width} height={height} />
+    default:
+      return <Icosahedron width={width} height={height} />
+  }
+}
+
 function App() {
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
+  const [size, setSize] = useState(Math.min(window.innerWidth, window.innerHeight));
+  const [currentShape, setCurrentShape] = useState(0);
+
   const handleResize = () => {
-    setWidth(window.innerWidth);
-    setHeight(window.innerHeight);
+    setSize(Math.min(window.innerWidth, window.innerHeight));
   };
+
   useEffect(() => {
     window.addEventListener('resize', handleResize);
     return (() => {
       window.removeEventListener('resize', handleResize);
     });
   });
+
   return (
     <div className="container">
-      <Cube width={Math.min(width, height)} height={Math.min(width, height)} />
+      <button onClick={() => {setCurrentShape((currentShape + 1) % 5);}}> Next </button>
+      <ShapeFactory shp={currentShape} width={size} height={size} />
     </div>
   );
 }
