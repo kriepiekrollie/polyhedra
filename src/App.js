@@ -1,14 +1,71 @@
 import React, {useRef, useState, useEffect} from 'react';
 import "./App.css"
 
-function Canvas({rotationMatrix, width, height}) {
+function cross(p, q) {
+  return { 
+    x : p.y * q.z - p.z * q.y,
+    y : p.x * q.z - p.z * q.x,
+    z : p.x * q.y - p.y * q.x,
+  };
+}
+
+function normalize(p) {
+  var d = Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
+  return { x : p.x / d, y : p.y / d, z : p.z / d };
+}
+
+function norm(A, B, C) {
+  var p = { x : B.x - A.x, y : B.y - A.y, z : B.z - A.z };
+  var q = { x : C.x - A.x, y : C.y - A.y, z : C.z - A.z };
+  return normalize(cross(p, q));
+}
+
+function matmul(X, Y) {
+  var temp = [
+    0.0, 0.0, 0.0, 0.0,
+    0.0, 0.0, 0.0, 0.0,
+    0.0, 0.0, 0.0, 0.0,
+    0.0, 0.0, 0.0, 0.0,
+  ];
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      for (let k = 0; k < 4; k++) {
+        temp[4 * i + j] += X[4 * k + j] * Y[4 * i + k];
+      }
+    }
+  }
+  return temp;
+}
+
+const FRAME_TIME = 10;
+
+function Shape({width, height, Vertices, Faces}) {
   const canvasRef = useRef(null);
 
   const glRef = useRef(0);
   const vbRef = useRef(0);
   const ibRef = useRef(0);
   const rmRef = useRef(0);
+  const niRef = useRef(0);
 
+  const [clicked, setClicked] = useState(false);
+
+  const [t, setT] = useState(Date.now());
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
+  const [dt, setDT] = useState(0);
+  const [dx, setDX] = useState(0);
+  const [dy, setDY] = useState(0);
+
+  const [rotationMatrix, setRotationMatrix] = useState([
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  ]);
+
+  /*
   // Define the vertices
   const vertices = [
     -0.5,-0.5,-0.5, +0.5,-0.5,-0.5, +0.5,+0.5,-0.5, -0.5,+0.5,-0.5,
@@ -34,12 +91,39 @@ function Canvas({rotationMatrix, width, height}) {
     8,9,10, 8,10,11, 12,13,14, 12,14,15,
     16,17,18, 16,18,19, 20,21,22, 20,22,23 
   ];
+  */
 
   useEffect(() => {
     const canvas = canvasRef.current;
 
     // Get the WebGL context from the canvas.
     var gl = canvas.getContext('experimental-webgl', { Alpha:true });
+
+    var vertices = [
+    ];
+    var normals = [
+    ];
+    var indices = [
+    ];
+
+    var numIndices = 0;
+    for (let i = 0; i < Faces.length; i++) {
+      for (let j = 1; j < Faces[i].length - 1; j++) {
+        for (let k of [Faces[i][0], Faces[i][j], Faces[i][j+1]]) {
+          indices.push(numIndices);
+          numIndices++;
+          vertices.push(Vertices[k].x);
+          vertices.push(Vertices[k].y);
+          vertices.push(Vertices[k].z);
+        }
+        const normal = norm(Vertices[Faces[i][0]], Vertices[Faces[i][j]], Vertices[Faces[i][j+1]]);
+        for (let k = 0; k < 3; k++) {
+          normals.push(normal.x);
+          normals.push(normal.y);
+          normals.push(normal.z);
+        }
+      }
+    }
 
     // Create a vertex buffer.
     var vertexBuffer = gl.createBuffer();
@@ -65,8 +149,8 @@ function Canvas({rotationMatrix, width, height}) {
       "void main(void) {" +
       "  gl_Position = rotation_matrix * vec4(vertex_pos, 1.0);" +
       "  vec4 light_dir = rotation_matrix * vec4(1.0, 0.0, 0.0, 1.0);" +
-      "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(-1.0, 1.0, -3.0, 0.0))));" +
-      "  vColor = vec4(0.2 + 0.8 * x, 0.0, 0.0, 1.0);" +
+      "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -1.0, 3.0, 0.0))));" +
+      "  vColor = vec4(x, 0.2 * x, 0.4 * x, 1.0);" +
       "  gl_PointSize = 10.0;" +
       "}";
 
@@ -112,13 +196,63 @@ function Canvas({rotationMatrix, width, height}) {
     vbRef.current = vertexBuffer;
     ibRef.current = indexBuffer;
     rmRef.current = var_rotation_matrix;
+    niRef.current = numIndices;
   }, []);
+
+  const handleMouseDown = (event) => {
+    setClicked(true);
+    setX(event.clientX);
+    setY(event.clientY);
+    setT(Date.now());
+  };
+
+  const handleMouseUp = (event) => {
+    setClicked(false);
+    setDX(dx / dt * FRAME_TIME);
+    setDY(dy / dt * FRAME_TIME);
+    setDT(FRAME_TIME);
+  };
+
+  const handleMouseMove = (event) => {
+    if (clicked) {
+      const now = Date.now();
+
+      setDX(event.clientX - x);
+      setDY(event.clientY - y);
+      setDT(now - t);
+
+      setX(event.clientX);
+      setY(event.clientY);
+      setT(now);
+
+      updateRotation();
+    }
+  };
+
+  const updateRotation = () => {
+    const ry = dx / 100;
+    const rx = dy / 100;
+    const mx = [
+      1.0, 0.0, 0.0, 0.0,
+      0.0, Math.cos(rx), -Math.sin(rx), 0.0,
+      0.0, Math.sin(rx), Math.cos(rx), 0.0,
+      0.0, 0.0, 0.0, 1.0,
+    ];
+    const my = [
+      Math.cos(ry), 0.0, Math.sin(ry), 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      -Math.sin(ry), 0.0, Math.cos(ry), 0.0,
+      0.0, 0.0, 0.0, 1.0,
+    ];
+    setRotationMatrix(matmul(my, matmul(mx, rotationMatrix)));
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
     var gl = glRef.current;
     const vertexBuffer = vbRef.current;
     const indexBuffer = ibRef.current;
+    const numIndices = niRef.current;
     const mat = rmRef.current;
 
     gl.uniformMatrix4fv(mat, false, rotationMatrix);
@@ -129,104 +263,74 @@ function Canvas({rotationMatrix, width, height}) {
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, numIndices, gl.UNSIGNED_SHORT, 0);
 
     glRef.current = gl;
-  });
 
-  return <canvas ref={canvasRef} width="900" height="900"></canvas>;
-};
-
-function matmul(X, Y) {
-  var temp = [
-    0.0, 0.0, 0.0, 0.0,
-    0.0, 0.0, 0.0, 0.0,
-    0.0, 0.0, 0.0, 0.0,
-    0.0, 0.0, 0.0, 0.0,
-  ];
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
-      for (let k = 0; k < 4; k++) {
-        temp[4 * i + j] += X[4 * k + j] * Y[4 * i + k];
-      }
-    }
-  }
-  return temp;
-}
-
-function Container() {
-  const [clicked, setClicked] = useState(false);
-  const [prev, setPrev] = useState({ x: 0, y: 0 });
-  const [dx, setDX] = useState(0);
-  const [dy, setDY] = useState(0);
-  const [rm, setRM] = useState([
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
-  ]);
-
-  const handleMouseDown = (event) => {
-    setClicked(true);
-    setPrev({ x: event.clientX, y: event.clientY });
-  };
-
-  const handleMouseUp = (event) => {
-    setClicked(false);
-  };
-
-  const handleMouseMove = (event) => {
-    if (clicked) {
-      setDX(event.clientX - prev.x);
-      setDY(event.clientY - prev.y);
-      setPrev({ x: event.clientX, y: event.clientY });
-      updateRotation();
-    }
-  };
-
-  const updateRotation = () => {
-    const ty = dx / 100;
-    const tx = dy / 100;
-    const mx = [
-      1.0, 0.0, 0.0, 0.0,
-      0.0, Math.cos(tx), -Math.sin(tx), 0.0,
-      0.0, Math.sin(tx), Math.cos(tx), 0.0,
-      0.0, 0.0, 0.0, 1.0,
-    ];
-    const my = [
-      Math.cos(ty), 0.0, Math.sin(ty), 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      -Math.sin(ty), 0.0, Math.cos(ty), 0.0,
-      0.0, 0.0, 0.0, 1.0,
-    ];
-    setRM(matmul(my, matmul(mx, rm)));
-  }
-
-  useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
 
     const interval = setInterval(() => {
-      if (!clicked && Math.abs(dx) > 0.1 && Math.abs(dy) > 0.1) {
+      if (!clicked) {
         setDX(dx * 0.95);
         setDY(dy * 0.95);
         updateRotation();
       }
-    }, 16);
+    }, FRAME_TIME);
 
     return (() => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
       clearInterval(interval);
     });
-
   });
-  
+
+  return <canvas className="shape" ref={canvasRef} onMouseDownCapture={handleMouseDown} width={width} height={height}></canvas>;
+};
+
+
+function Cube({width, height}) {
+  const vertices = [
+    { x : 0.5, y : 0.5, z : 0.5},
+    { x :-0.5, y : 0.5, z : 0.5},
+    { x : 0.5, y :-0.5, z : 0.5},
+    { x : 0.5, y : 0.5, z :-0.5},
+    { x : 0.5, y :-0.5, z :-0.5},
+    { x :-0.5, y : 0.5, z :-0.5},
+    { x :-0.5, y :-0.5, z : 0.5},
+    { x :-0.5, y :-0.5, z :-0.5},
+  ];
+  const faces = [
+    [0, 2, 6, 1],
+    [3, 5, 7, 4],
+    [0, 3, 4, 2],
+    [1, 6, 7, 5],
+    [0, 3, 5, 1],
+    [2, 6, 7, 4],
+  ];
   return (
-    <div className="container" onMouseDownCapture={handleMouseDown}>
-      <Canvas rotationMatrix={rm} />
+      <Shape width={width} height={height} Vertices={vertices} Faces={faces} />
+  );
+}
+
+function App() {
+  const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+  };
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return (() => {
+      window.removeEventListener('resize', handleResize);
+    });
+  });
+  return (
+    <div className="container">
+      <Cube width={Math.min(width, height)} height={Math.min(width, height)} />
     </div>
   );
 }
 
-export default Container;
+export default App;
