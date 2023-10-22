@@ -11,7 +11,8 @@ const getSize = (width, height) => (width > 900 ? Math.min(0.8 * width, height) 
 
 function App() {
   const [size, setSize] = useState(getSize(window.innerWidth, window.innerHeight));
-  const [currentShape, setCurrentShape] = useState(TRUNCATED_OCTAHEDRON);
+  const [currentShape, setCurrentShape] = useState(TETRAHEDRON);
+  const [wireframe, setWireframe] = useState(false);
 
   const handleResize = () => {
     setSize(getSize(window.innerWidth, window.innerHeight));
@@ -40,12 +41,12 @@ function App() {
 
         <ul className="optionMenu">
 
-          <li onClick={() => {setCurrentShape(CUBE);}}> 
-            <p>Cube</p> 
-          </li>
-
           <li onClick={() => {setCurrentShape(TETRAHEDRON);}}> 
             <p>Tetrahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(CUBE);}}> 
+            <p>Hexahedron</p> 
           </li>
 
           <li onClick={() => {setCurrentShape(OCTAHEDRON);}}> 
@@ -104,12 +105,16 @@ function App() {
             <p>Great Dodecahedron</p> 
           </li>
 
+          <li onClick={() => {setWireframe(!wireframe);}}> 
+            <p>Toggle Wireframe Mode</p> 
+          </li>
+
         </ul>
 
       </div>
 
       <div className="article">
-        <ShapeRenderer width={size} height={size} Vertices={currentShape.Vertices} Faces={currentShape.Faces} />
+        <ShapeRenderer width={size} height={size} shape={currentShape} wireframeMode={wireframe} />
       </div>
 
     </>

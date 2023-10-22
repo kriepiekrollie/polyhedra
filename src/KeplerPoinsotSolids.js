@@ -47,19 +47,19 @@ export const GREAT_DODECAHEDRON = (() => {
   var faces = [];
   for (let i = 0; i < 12; i++) {
     var x = 0;
-    var edges = new Map();
+    var mp = new Map();
     for (let face of icofaces) {
       for (let j = 0; j < 3; j++) {
         if (face[j] === i) {
           const [a, b] = [face[(j+1)%3], face[(j+2)%3]];
-          edges.set(a, b);
+          mp.set(a, b);
           x = face[(j+1)%3];
         }
       }
     }
     var face = [x];
-    var y = edges.get(x);
-    for (let y = edges.get(x); y != x && edges.has(y); y = edges.get(y)) {
+    var y = mp.get(x);
+    for (let y = mp.get(x); y != x && mp.has(y); y = mp.get(y)) {
       face.push(y);
     }
     faces.push(face);

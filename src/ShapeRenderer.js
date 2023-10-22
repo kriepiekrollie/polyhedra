@@ -58,15 +58,20 @@ function matmul(X, Y) {
 
 const FRAME_TIME = 10;
 
-function ShapeRenderer({ width, height, Vertices, Faces }) {
+function ShapeRenderer({ width, height, shape, wireframeMode }) {
   const canvasRef = useRef(null);
 
   const glRef = useRef(0);
+
   const vertexBufferRef = useRef(0);
-  const indexBufferRef = useRef(0);
-  const shaderProgramRef = useRef(0);
-  const varRotationMatrixRef = useRef(0);
-  const numIndicesRef = useRef(0);
+  const edgeIndexBufferRef = useRef(0);
+  const faceIndexBufferRef = useRef(0);
+
+  const faceShaderProgramRef = useRef(0);
+  const edgeShaderProgramRef = useRef(0);
+
+  const numFaceIndicesRef = useRef(0);
+  const numEdgeIndicesRef = useRef(0);
 
   const [clicked, setClicked] = useState(false);
 
@@ -94,7 +99,7 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
 
     // Code for our vertex shader.
     // I literally have no idea how to write these shaders properly.
-    const vs_code = 
+    const fvs_code = 
       "attribute vec3 vertex_pos;" +
       "attribute vec3 normal;" +
       "uniform mat4 rotation_matrix;" +
@@ -102,42 +107,77 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
       "varying vec4 vColor;" +
       "void main(void) {" +
       "  gl_Position = projection_matrix * rotation_matrix * vec4(vertex_pos, 1.0);" +
-      "  vec4 light_dir = rotation_matrix * vec4(1.0, 0.0, 0.0, 1.0);" +
       "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -2.0, 3.0, 0.0))));" +
       "  float y = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(2.0, 1.0, -1.0, 0.0))));" +
       "  vColor = vec4(x, y, 1.0 - x, 0.8);" +
-      "  gl_PointSize = 10.0;" +
       "}";
 
-    // Add and compile the vertex shader.
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader, vs_code);
-    gl.compileShader(vertexShader);
+    const evs_code = 
+      "attribute vec3 vertex_pos;" +
+      "uniform mat4 rotation_matrix;" +
+      "uniform mat4 projection_matrix;" +
+      "varying vec4 vColor;" +
+      "void main(void) {" +
+      "  gl_Position = projection_matrix * rotation_matrix * vec4(vertex_pos, 1.0);" +
+      "  float x = 0.4 * (1.0 + dot(gl_Position, vec4(0.0, 0.0, 1.0, 0.0)));" +
+      "  vColor = vec4(x, x, x, 1.0);" +
+      "}";
 
-    // Code for our fragment shader.
-    const fs_code = 
+    // Add and compile the vertex shaders.
+    var faceVertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(faceVertexShader, fvs_code);
+    gl.compileShader(faceVertexShader);
+
+    var edgeVertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(edgeVertexShader, evs_code);
+    gl.compileShader(edgeVertexShader);
+
+    // Code for our fragment shaders.
+    const ffs_code = 
       "precision mediump float;" +
       "varying vec4 vColor;" +
       "void main(void) {" +
       "  gl_FragColor = vColor;" + 
       "}";
 
-    // Add and compile the fragment shader.
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, fs_code);
-    gl.compileShader(fragmentShader);
+    const efs_code = 
+      "precision mediump float;" +
+      "varying vec4 vColor;" +
+      "void main(void) {" +
+      "  gl_FragColor = vColor;" + 
+      "}";
+
+    // Add and compile the fragment shaders.
+    var faceFragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(faceFragmentShader, ffs_code);
+    gl.compileShader(faceFragmentShader);
+
+    var edgeFragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(edgeFragmentShader, efs_code);
+    gl.compileShader(edgeFragmentShader);
 
     // Create a shader program from the two shaders.
-    var shaderProgram = gl.createProgram();
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
-    gl.useProgram(shaderProgram);
+    var faceShaderProgram = gl.createProgram();
+    gl.attachShader(faceShaderProgram, faceVertexShader);
+    gl.attachShader(faceShaderProgram, faceFragmentShader);
+    gl.linkProgram(faceShaderProgram);
+    gl.useProgram(faceShaderProgram);
 
-    var var_rotation_matrix = gl.getUniformLocation(shaderProgram, "rotation_matrix");
+    var var_projection_matrix = gl.getUniformLocation(faceShaderProgram, "projection_matrix");
+    gl.uniformMatrix4fv(var_projection_matrix, false, new Float32Array([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0.2,
+      0, 0, 0, 1.2,
+    ]));
 
-    var var_projection_matrix = gl.getUniformLocation(shaderProgram, "projection_matrix");
+    var edgeShaderProgram = gl.createProgram();
+    gl.attachShader(edgeShaderProgram, edgeVertexShader);
+    gl.attachShader(edgeShaderProgram, edgeFragmentShader);
+    gl.linkProgram(edgeShaderProgram);
+    gl.useProgram(edgeShaderProgram);
 
+    var_projection_matrix = gl.getUniformLocation(edgeShaderProgram, "projection_matrix");
     gl.uniformMatrix4fv(var_projection_matrix, false, new Float32Array([
       1, 0, 0, 0,
       0, 1, 0, 0,
@@ -146,44 +186,60 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
     ]));
 
     glRef.current = gl;
-    varRotationMatrixRef.current = var_rotation_matrix;
-    shaderProgramRef.current = shaderProgram;
+    faceShaderProgramRef.current = faceShaderProgram;
+    edgeShaderProgramRef.current = edgeShaderProgram;
   }, []);
 
   // We run this code the first time this element is drawn, and every time the variables "Vertices" and "Faces" changes.
   useEffect(() => {
     var gl = glRef.current;
-    var shaderProgram = shaderProgramRef.current;
+    var faceShaderProgram = faceShaderProgramRef.current;
+    var edgeShaderProgram = edgeShaderProgramRef.current;
     var vertexBuffer = vertexBufferRef.current;
-    var indexBuffer = indexBufferRef.current;
+    var edgeIndexBuffer = edgeIndexBufferRef.current;
+    var faceIndexBuffer = faceIndexBufferRef.current;
 
     if (vertexBuffer !== 0 && gl.isBuffer(vertexBuffer)) {
       gl.deleteBuffer(vertexBuffer);
     }
-    if (indexBuffer !== 0 && gl.isBuffer(indexBuffer)) {
-      gl.deleteBuffer(indexBuffer);
+    if (edgeIndexBuffer !== 0 && gl.isBuffer(edgeIndexBuffer)) {
+      gl.deleteBuffer(edgeIndexBuffer);
+    }
+    if (faceIndexBuffer !== 0 && gl.isBuffer(faceIndexBuffer)) {
+      gl.deleteBuffer(faceIndexBuffer);
     }
 
     var vertices = [];
     var normals = [];
-    var indices = [];
+    var faceIndices = [];
+    var edgeIndices = [];
+    var numEdgeIndices = 0;
 
-    var numIndices = 0;
-    for (let i = 0; i < Faces.length; i++) {
-      for (let j = 1; j < Faces[i].length - 1; j++) {
-        for (let k of [Faces[i][0], Faces[i][j], Faces[i][j+1]]) {
-          indices.push(numIndices);
-          numIndices++;
-          vertices.push(Vertices[k].x);
-          vertices.push(Vertices[k].y);
-          vertices.push(Vertices[k].z);
+    var indexOf = new Array(shape.Vertices.length);
+
+    var numFaceIndices = 0;
+    for (let face of shape.Faces) {
+      for (let j = 1; j < face.length - 1; j++) {
+        for (let k of [face[0], face[j], face[j+1]]) {
+          faceIndices.push(numFaceIndices);
+          indexOf[k] = numFaceIndices;
+          numFaceIndices++;
+          vertices.push(shape.Vertices[k].x);
+          vertices.push(shape.Vertices[k].y);
+          vertices.push(shape.Vertices[k].z);
         }
-        const n = normal(Vertices[Faces[i][0]], Vertices[Faces[i][j]], Vertices[Faces[i][j+1]]);
+        const n = normal(shape.Vertices[face[0]], shape.Vertices[face[j]], shape.Vertices[face[j+1]]);
         for (let k = 0; k < 3; k++) {
           normals.push(n.x);
           normals.push(n.y);
           normals.push(n.z);
         }
+      }
+      for (let j = 0; j < face.length; j++) {
+        const [a, b] = [face[j], face[(j+1)%face.length]];
+        edgeIndices.push(indexOf[a]);
+        edgeIndices.push(indexOf[b]);
+        numEdgeIndices++;
       }
     }
 
@@ -197,32 +253,47 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 
-    // Create an index buffer.
-    indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    // Create a index buffers.
+    faceIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, faceIndexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(faceIndices), gl.STATIC_DRAW);
+
+    edgeIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, edgeIndexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(edgeIndices), gl.STATIC_DRAW);
 
     // Associate vertex buffer object with "coordinates" attribute in shader program.
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    var var_vertex_pos = gl.getAttribLocation(shaderProgram, "vertex_pos");
+
+    gl.useProgram(faceShaderProgram);
+    var var_vertex_pos = gl.getAttribLocation(faceShaderProgram, "vertex_pos");
+    gl.vertexAttribPointer(var_vertex_pos, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(var_vertex_pos);
+
+    gl.useProgram(edgeShaderProgram);
+    var_vertex_pos = gl.getAttribLocation(edgeShaderProgram, "vertex_pos");
     gl.vertexAttribPointer(var_vertex_pos, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(var_vertex_pos);
 
     // Associate normals buffer object with "normal" attribute in shader program."
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-    var var_normal = gl.getAttribLocation(shaderProgram, "normal");
+    gl.useProgram(faceShaderProgram);
+    var var_normal = gl.getAttribLocation(faceShaderProgram, "normal");
     gl.vertexAttribPointer(var_normal, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(var_normal);
 
     glRef.current = gl;
     vertexBufferRef.current = vertexBuffer;
-    indexBufferRef.current = indexBuffer;
-    numIndicesRef.current = numIndices;
-    shaderProgramRef.current = shaderProgram;
-  }, [Vertices, Faces]);
+    edgeIndexBufferRef.current = edgeIndexBuffer;
+    faceIndexBufferRef.current = faceIndexBuffer;
+    numFaceIndicesRef.current = numFaceIndices;
+    numEdgeIndicesRef.current = numEdgeIndices;
+    faceShaderProgramRef.current = faceShaderProgram;
+    edgeShaderProgramRef.current = edgeShaderProgram;
+  }, [shape]);
 
   const handleTouchStart = (event) => {
-    if (event.target == canvasRef.current && event.targetTouches.length > 0) {
+    if (event.target === canvasRef.current && event.targetTouches.length > 0) {
       event.preventDefault();
       setClicked(true);
       setX(event.targetTouches[0].clientX);
@@ -232,7 +303,7 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
   };
 
   const handleTouchMove = (event) => {
-    if (clicked && event.target == canvasRef.current && event.targetTouches.length > 0) {
+    if (clicked && event.target === canvasRef.current && event.targetTouches.length > 0) {
       event.preventDefault();
       setDX(event.targetTouches[0].clientX - x);
       setDY(event.targetTouches[0].clientY - y);
@@ -247,7 +318,7 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
   };
 
   const handleTouchEnd = (event) => {
-    if (clicked && event.target == canvasRef.current) {
+    if (clicked && event.target === canvasRef.current) {
       event.preventDefault();
       setClicked(false);
       setDX(dx / dt * FRAME_TIME);
@@ -257,7 +328,7 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
   };
 
   const handleMouseDown = (event) => {
-    if (event.target == canvasRef.current) {
+    if (event.target === canvasRef.current) {
       setClicked(true);
       setX(event.clientX);
       setY(event.clientY);
@@ -310,20 +381,39 @@ function ShapeRenderer({ width, height, Vertices, Faces }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     var gl = glRef.current;
-    const vertexBuffer = vertexBufferRef.current;
-    const indexBuffer = indexBufferRef.current;
-    const numIndices = numIndicesRef.current;
-    const varRotationMatrix = varRotationMatrixRef.current;
 
-    gl.uniformMatrix4fv(varRotationMatrix, false, rotationMatrix);
+    const vertexBuffer = vertexBufferRef.current;
+    const edgeIndexBuffer = edgeIndexBufferRef.current;
+    const faceIndexBuffer = faceIndexBufferRef.current;
+
+    const numFaceIndices = numFaceIndicesRef.current;
+    const numEdgeIndices = numEdgeIndicesRef.current;
+
+    const faceShaderProgram = faceShaderProgramRef.current;
+    const edgeShaderProgram = edgeShaderProgramRef.current;
 
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.enable(gl.DEPTH_TEST);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.drawElements(gl.TRIANGLES, numIndices, gl.UNSIGNED_SHORT, 0);
+    if (wireframeMode) {
+      gl.useProgram(edgeShaderProgram);
+
+      var var_rotation_matrix = gl.getUniformLocation(edgeShaderProgram, "rotation_matrix");
+      gl.uniformMatrix4fv(var_rotation_matrix, false, rotationMatrix);
+
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, edgeIndexBuffer);
+      gl.drawElements(gl.LINES, numEdgeIndices * 2, gl.UNSIGNED_SHORT, 0);
+    } else {
+      gl.useProgram(faceShaderProgram);
+
+      var var_rotation_matrix = gl.getUniformLocation(faceShaderProgram, "rotation_matrix");
+      gl.uniformMatrix4fv(var_rotation_matrix, false, rotationMatrix);
+
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, faceIndexBuffer);
+      gl.drawElements(gl.TRIANGLES, numFaceIndices, gl.UNSIGNED_SHORT, 0);
+    }
 
     glRef.current = gl;
 
