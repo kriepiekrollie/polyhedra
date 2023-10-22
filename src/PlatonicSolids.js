@@ -121,7 +121,6 @@ export const DODECAHEDRON = (() => {
   for (let vertex of vertices) {
     r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
   }
-  console.log(r);
   for (let i = 0; i < vertices.length; i++) {
     vertices[i].x /= r;
     vertices[i].y /= r;
@@ -177,21 +176,6 @@ export const ICOSAHEDRON = (() => {
     [3, 11, 7],
     [3, 1, 11],
   ];
-  for (let face of faces) {
-    var x = 0;
-    var y = 0;
-    var z = 0;
-    for (let i of face) {
-      const vertex = vertices[i];
-      x += vertex.x;
-      y += vertex.y;
-      z += vertex.z;
-    }
-    x /= face.length;
-    y /= face.length;
-    z /= face.length;
-    console.log(Math.sqrt(x * x + y * y + z * z));
-  }
   var r = 0;
   for (let vertex of vertices) {
     r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
