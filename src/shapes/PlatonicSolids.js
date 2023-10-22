@@ -189,7 +189,7 @@ export const ICOSAHEDRON = (() => {
     Vertices:vertices,
     Faces:faces,
   };
-});
+})();
 
 
 export default CUBE;

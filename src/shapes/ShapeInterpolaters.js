@@ -557,7 +557,7 @@ export function Octahedron_Truncate(t) {
   }
 }
 
-export function Cube_Octahedron_Interp(t) {
+export function Cube_Octahedron(t) {
   if (t < 0.5) {
     return Cube_Tetrakis(2.0 * t);
   } else {
@@ -572,7 +572,7 @@ export function Cube_Octahedron_Interp(t) {
   */
 }
 
-export function Dodecahedron_Icosahedron_Interp(t) {
+export function Dodecahedron_Icosahedron(t) {
   if (t < 0.5) {
     return Dodecahedron_Pentakis(2.0 * t);
   } else {

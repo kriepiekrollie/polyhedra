@@ -1,17 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
-import ShapeRenderer from "./ShapeRenderer.js";
-import { CUBE, TETRAHEDRON, OCTAHEDRON, DODECAHEDRON, ICOSAHEDRON } from "./PlatonicSolids.js";
-import { TRIAKIS_TETRAHEDRON, TETRAKIS_HEXAHEDRON, TRIAKIS_OCTAHEDRON, RHOMBIC_DODECAHEDRON, PENTAKIS_DODECAHEDRON, TRIAKIS_ICOSAHEDRON, RHOMBIC_TRIACONTAHEDRON } from "./CatalanSolids.js";
-import { TRUNCATED_CUBE, TRUNCATED_OCTAHEDRON, CUBOCTAHEDRON } from "./ArchimedeanSolids.js"
-import { GREAT_DODECAHEDRON } from "./KeplerPoinsotSolids.js"
-import "./App.css";
+import ShapeRenderer from "../shapes/ShapeRenderer.js";
+import * as PlatonicSolids from "../shapes/PlatonicSolids.js";
+import * as CatalanSolids from "../shapes/CatalanSolids.js";
+import * as ArchimedeanSolids from "../shapes/ArchimedeanSolids.js"
+import * as KeplerPoinsotSolids from "../shapes/KeplerPoinsotSolids.js"
+import "./Playground.css";
 
 // There must be a better way to do this, surely? (this is to match the css).
 const getSize = (width, height) => (width > 900 ? Math.min(0.8 * width, height) : Math.min(width, 0.9 * height));
 
-function App() {
+export default function Playground() {
   const [size, setSize] = useState(getSize(window.innerWidth, window.innerHeight));
-  const [currentShape, setCurrentShape] = useState(TETRAHEDRON);
+  const [currentShape, setCurrentShape] = useState(PlatonicSolids.TETRAHEDRON);
   const [wireframe, setWireframe] = useState(false);
 
   const handleResize = () => {
@@ -41,67 +41,67 @@ function App() {
 
         <ul className="optionMenu">
 
-          <li onClick={() => {setCurrentShape(TETRAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(PlatonicSolids.TETRAHEDRON);}}> 
             <p>Tetrahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(CUBE);}}> 
+          <li onClick={() => {setCurrentShape(PlatonicSolids.CUBE);}}> 
             <p>Hexahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(OCTAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(PlatonicSolids.OCTAHEDRON);}}> 
             <p>Octahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(DODECAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(PlatonicSolids.DODECAHEDRON);}}> 
             <p>Dodecahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(ICOSAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(PlatonicSolids.ICOSAHEDRON);}}> 
             <p>Icosahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(TRUNCATED_CUBE);}}> 
+          <li onClick={() => {setCurrentShape(ArchimedeanSolids.TRUNCATED_CUBE);}}> 
             <p>Truncated Cube</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(TRUNCATED_OCTAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(ArchimedeanSolids.TRUNCATED_OCTAHEDRON);}}> 
             <p>Truncated Octahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(CUBOCTAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(ArchimedeanSolids.CUBOCTAHEDRON);}}> 
             <p>Cuboctahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(TRIAKIS_TETRAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.TRIAKIS_TETRAHEDRON);}}> 
             <p>Triakis Tetrahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(TETRAKIS_HEXAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.TETRAKIS_HEXAHEDRON);}}> 
             <p>Tetrakis Hexahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(TRIAKIS_OCTAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.TRIAKIS_OCTAHEDRON);}}> 
             <p>Triakis Octahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(RHOMBIC_DODECAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.RHOMBIC_DODECAHEDRON);}}> 
             <p>Rhombic Dodecahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(PENTAKIS_DODECAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.PENTAKIS_DODECAHEDRON);}}> 
             <p>Pentakis Dodecahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(TRIAKIS_ICOSAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.TRIAKIS_ICOSAHEDRON);}}> 
             <p>Triakis Icosahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(RHOMBIC_TRIACONTAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(CatalanSolids.RHOMBIC_TRIACONTAHEDRON);}}> 
             <p>Rhombic Triacontahedron</p> 
           </li>
 
-          <li onClick={() => {setCurrentShape(GREAT_DODECAHEDRON);}}> 
+          <li onClick={() => {setCurrentShape(KeplerPoinsotSolids.GREAT_DODECAHEDRON);}}> 
             <p>Great Dodecahedron</p> 
           </li>
 
@@ -120,21 +120,3 @@ function App() {
     </>
   );
 }
-/*
-function App() {
-  const [shape, setShape] = useState(DODECAHEDRON);
-  const handleSliderChange = (event) => {
-    setShape(Dodecahedron_Icosahedron_Interp(event.target.value / 100));
-  };
-  return (
-    <>
-      <input type="range" min="0" max="100" onChange={handleSliderChange} />
-      <div className="article">
-        <ShapeRenderer width={900} height={900} Vertices={shape.Vertices} Faces={shape.Faces} />
-      </div>
-    </>
-  );
-}
-*/
-
-export default App;

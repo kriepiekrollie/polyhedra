@@ -1,0 +1,11 @@
+nav {
+  position:fixed;
+  left: 0;
+  top:95vh;
+}
+nav ul {
+  display:inline;
+}
+nav li {
+  display:inline;
+}
