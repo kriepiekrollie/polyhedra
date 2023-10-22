@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ShapeRenderer from "./ShapeRenderer.js";
 import { CUBE, TETRAHEDRON, OCTAHEDRON, DODECAHEDRON, ICOSAHEDRON } from "./PlatonicSolids.js";
-import { RHOMBIC_DODECAHEDRON, RHOMBIC_TRIACONTAHEDRON } from "./CatalanSolids.js";
-import { TRUNCATED_CUBE, TRUNCATED_OCTAHEDRON } from "./ArchimedeanSolids.js"
-import { Cube_Tetrahedron_Interp, Cube_Octahedron_Interp, Cube_Cuboctahedron_Interp, Octahedron_Cuboctahedron_Interp } from "./ShapeInterpolaters.js";
+import { TRIAKIS_TETRAHEDRON, TETRAKIS_HEXAHEDRON, TRIAKIS_OCTAHEDRON, RHOMBIC_DODECAHEDRON, PENTAKIS_DODECAHEDRON, TRIAKIS_ICOSAHEDRON, RHOMBIC_TRIACONTAHEDRON } from "./CatalanSolids.js";
+import { TRUNCATED_CUBE, TRUNCATED_OCTAHEDRON, CUBOCTAHEDRON } from "./ArchimedeanSolids.js"
+import { Dodecahedron_Icosahedron_Interp } from "./ShapeInterpolaters.js";
 import "./App.css";
 
 // There must be a better way to do this, surely? (this is to match the css).
@@ -68,8 +68,32 @@ function App() {
             <p>Truncated Octahedron</p> 
           </li>
 
+          <li onClick={() => {setCurrentShape(CUBOCTAHEDRON);}}> 
+            <p>Cuboctahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(TRIAKIS_TETRAHEDRON);}}> 
+            <p>Triakis Tetrahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(TETRAKIS_HEXAHEDRON);}}> 
+            <p>Tetrakis Hexahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(TRIAKIS_OCTAHEDRON);}}> 
+            <p>Triakis Octahedron</p> 
+          </li>
+
           <li onClick={() => {setCurrentShape(RHOMBIC_DODECAHEDRON);}}> 
             <p>Rhombic Dodecahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(PENTAKIS_DODECAHEDRON);}}> 
+            <p>Pentakis Dodecahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(TRIAKIS_ICOSAHEDRON);}}> 
+            <p>Triakis Icosahedron</p> 
           </li>
 
           <li onClick={() => {setCurrentShape(RHOMBIC_TRIACONTAHEDRON);}}> 
@@ -87,12 +111,11 @@ function App() {
     </>
   );
 }
-
 /*
 function App() {
-  const [shape, setShape] = useState(OCTAHEDRON);
+  const [shape, setShape] = useState(DODECAHEDRON);
   const handleSliderChange = (event) => {
-    setShape(Cube_Octahedron_Interp(event.target.value / 100));
+    setShape(Dodecahedron_Icosahedron_Interp(event.target.value / 100));
   };
   return (
     <>

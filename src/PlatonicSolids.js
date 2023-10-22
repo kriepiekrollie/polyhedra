@@ -76,18 +76,17 @@ export const OCTAHEDRON = (() => {
 
 export const DODECAHEDRON = (() => {
   const phi = (1 + Math.sqrt(5)) / 2;
-  const r = 1 / Math.sqrt(3);
-  const p = phi * r
-  const q = r / phi;
+  const p = phi * 1
+  const q = 1 / phi;
   const vertices = [
-    { x : r, y : r, z : r },
-    { x :-r, y : r, z : r },
-    { x : r, y :-r, z : r },
-    { x : r, y : r, z :-r },
-    { x : r, y :-r, z :-r },
-    { x :-r, y : r, z :-r },
-    { x :-r, y :-r, z : r },
-    { x :-r, y :-r, z :-r },
+    { x : 1, y : 1, z : 1 },
+    { x :-1, y : 1, z : 1 },
+    { x : 1, y :-1, z : 1 },
+    { x : 1, y : 1, z :-1 },
+    { x : 1, y :-1, z :-1 },
+    { x :-1, y : 1, z :-1 },
+    { x :-1, y :-1, z : 1 },
+    { x :-1, y :-1, z :-1 },
 
     { x : 0, y : p, z : q },
     { x : 0, y :-p, z : q },
@@ -118,6 +117,16 @@ export const DODECAHEDRON = (() => {
     [1, 14, 6, 19, 17],
     [0, 8, 10, 3, 16],
   ];
+  var r = 0;
+  for (let vertex of vertices) {
+    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
+  }
+  console.log(r);
+  for (let i = 0; i < vertices.length; i++) {
+    vertices[i].x /= r;
+    vertices[i].y /= r;
+    vertices[i].z /= r;
+  }
   return {
     Vertices:vertices,
     Faces:faces,
@@ -126,24 +135,23 @@ export const DODECAHEDRON = (() => {
 
 export const ICOSAHEDRON = (() => {
   const phi = (1 + Math.sqrt(5)) / 2;
-  const r = Math.sqrt(phi * phi + 1);
-  const p = phi / r;
-  const q = 1 / r;
+  const p = phi;
+  const q = 1;
   const vertices = [
-    { x : p, y : 0, z : q },
-    { x :-p, y : 0, z : q },
-    { x : p, y : 0, z :-q },
-    { x :-p, y : 0, z :-q },
+    { x : p, y : 0, z : 1 },
+    { x :-p, y : 0, z : 1 },
+    { x : p, y : 0, z :-1 },
+    { x :-p, y : 0, z :-1 },
 
-    { x : 0, y : q, z : p },
-    { x : 0, y : q, z :-p },
-    { x : 0, y :-q, z : p },
-    { x : 0, y :-q, z :-p },
+    { x : 0, y : 1, z : p },
+    { x : 0, y : 1, z :-p },
+    { x : 0, y :-1, z : p },
+    { x : 0, y :-1, z :-p },
     
-    { x : q, y : p, z : 0 },
-    { x : q, y :-p, z : 0 },
-    { x :-q, y : p, z : 0 },
-    { x :-q, y :-p, z : 0 },
+    { x : 1, y : p, z : 0 },
+    { x : 1, y :-p, z : 0 },
+    { x :-1, y : p, z : 0 },
+    { x :-1, y :-p, z : 0 },
   ];
   const faces = [
     [0, 8, 2],
@@ -169,6 +177,30 @@ export const ICOSAHEDRON = (() => {
     [3, 11, 7],
     [3, 1, 11],
   ];
+  for (let face of faces) {
+    var x = 0;
+    var y = 0;
+    var z = 0;
+    for (let i of face) {
+      const vertex = vertices[i];
+      x += vertex.x;
+      y += vertex.y;
+      z += vertex.z;
+    }
+    x /= face.length;
+    y /= face.length;
+    z /= face.length;
+    console.log(Math.sqrt(x * x + y * y + z * z));
+  }
+  var r = 0;
+  for (let vertex of vertices) {
+    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
+  }
+  for (let i = 0; i < vertices.length; i++) {
+    vertices[i].x /= r;
+    vertices[i].y /= r;
+    vertices[i].z /= r;
+  }
   return {
     Vertices:vertices,
     Faces:faces,
