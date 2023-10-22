@@ -3,7 +3,7 @@ import ShapeRenderer from "./ShapeRenderer.js";
 import { CUBE, TETRAHEDRON, OCTAHEDRON, DODECAHEDRON, ICOSAHEDRON } from "./PlatonicSolids.js";
 import { TRIAKIS_TETRAHEDRON, TETRAKIS_HEXAHEDRON, TRIAKIS_OCTAHEDRON, RHOMBIC_DODECAHEDRON, PENTAKIS_DODECAHEDRON, TRIAKIS_ICOSAHEDRON, RHOMBIC_TRIACONTAHEDRON } from "./CatalanSolids.js";
 import { TRUNCATED_CUBE, TRUNCATED_OCTAHEDRON, CUBOCTAHEDRON } from "./ArchimedeanSolids.js"
-import { Dodecahedron_Icosahedron_Interp } from "./ShapeInterpolaters.js";
+import { GREAT_DODECAHEDRON } from "./KeplerPoinsotSolids.js"
 import "./App.css";
 
 // There must be a better way to do this, surely? (this is to match the css).
@@ -98,6 +98,10 @@ function App() {
 
           <li onClick={() => {setCurrentShape(RHOMBIC_TRIACONTAHEDRON);}}> 
             <p>Rhombic Triacontahedron</p> 
+          </li>
+
+          <li onClick={() => {setCurrentShape(GREAT_DODECAHEDRON);}}> 
+            <p>Great Dodecahedron</p> 
           </li>
 
         </ul>
