@@ -36,10 +36,10 @@ export default function Slider() {
 
   return (
     <>
-      <div className="article">
+      <input ref={slider} className="slider" type="range" min="0" max="100" onChange={handleSliderChange} />
+      <div className="slider-article">
         <ShapeRenderer width={size} height={size} shape={shape} wireframe={false} />
       </div>
-      <input ref={slider} type="range" min="0" max="100" onChange={handleSliderChange} />
     </>
   );
 }

@@ -12,6 +12,14 @@ body::-webkit-scrollbar {
     display : none;
 }
 
+.slider {
+  position:absolute;
+  z-index:2;
+  left:0;
+  top:0;
+  margin:20px;
+}
+
 .optionMenuContainer {
   position:inline;
   float:left;
@@ -60,6 +68,24 @@ body::-webkit-scrollbar {
 }
 .optionMenuLabel {
   display:none;
+}
+
+.slider-article {
+  z-index:1;
+  position:absolute;
+
+  width:100vw;
+  height:100vh;
+
+  left:0vw;
+  top:0vh;
+
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+
+  justify-content:center;
+  align-content:center;
 }
 
 .article {
