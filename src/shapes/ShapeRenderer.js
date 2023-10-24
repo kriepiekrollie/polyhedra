@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 
 function cross(p, q) {
   // Returns the cross product of the vectors p and q.
@@ -56,12 +56,31 @@ function matmul(X, Y) {
   return temp;
 }
 
-const FRAME_TIME = 10;
+// Stolen from https://stackoverflow.com/a/65008608
+function useOnScreen(ref) {
+  const [isIntersecting, setIntersecting] = useState(false);
+
+  const observer = useMemo(() => new IntersectionObserver(
+    ([entry]) => setIntersecting(entry.isIntersecting)
+  ), [ref]);
+
+  useEffect(() => {
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return isIntersecting;
+}
+
+// Should I rename this to FRAME_TIME_MILLISECONDS ?
+const FRAME_TIME = 17;
 
 function ShapeRenderer({ shape, wireframeMode }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [size, setSize] = useState(0);
+
+  const isVisible = useOnScreen(containerRef);
 
   const glRef = useRef(0);
 
@@ -380,6 +399,10 @@ function ShapeRenderer({ shape, wireframeMode }) {
 
   // We run this code every time the element is redrawn.
   useEffect(() => {
+    if (!isVisible) {
+      return; 
+    }
+
     const { width, height } = containerRef.current.getBoundingClientRect();
     const newsize = Math.min(width, height);
     if (size != newsize) {
