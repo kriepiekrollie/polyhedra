@@ -9,15 +9,19 @@ import Layout from "./pages/Layout";
 import Homepage from "./pages/Homepage";
 import Playground from "./pages/Playground";
 import Slider from "./pages/Slider";
+import ShapeArticle from "./pages/ShapeArticle";
 
 export default function App() {
   return (
     <HashRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
+
           <Route index element={<Homepage />} />
           <Route path="/playground" element={<Playground />} />
           <Route path="/slider" element={<Slider />} />
+          <Route path="/shape/:shape" element={<ShapeArticle />} />
+
         </Route>
       </Routes>
     </HashRouter>

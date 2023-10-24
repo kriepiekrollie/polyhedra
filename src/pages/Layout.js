@@ -46,17 +46,15 @@ function Navbar({ hidden }) {
     <nav className={hidden ? "hidden" : ""}>
       <div className="navTreeContainer">
         <NavTree>
-          <NavTree elem={<Link><h2>homepage</h2></Link>} />
-
           <NavTree elem={<Link><h2>polyhedra</h2></Link>}>
 
             <NavTree elem={<Link><h3>platonic solids</h3></Link>}>
 
-              <NavTree elem={<Link><h4>tetrahedron</h4></Link>} />
-              <NavTree elem={<Link><h4>hexahedron</h4></Link>} />
-              <NavTree elem={<Link><h4>octahedron</h4></Link>} />
-              <NavTree elem={<Link><h4>dodecahedron</h4></Link>} />
-              <NavTree elem={<Link><h4>icosahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/tetrahedron"><h4>tetrahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/hexahedron"><h4>hexahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/octahedron"><h4>octahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/dodecahedron"><h4>dodecahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/icosahedron"><h4>icosahedron</h4></Link>} />
 
             </NavTree>
 
@@ -101,7 +99,6 @@ function Navbar({ hidden }) {
 
               <NavTree elem={<Link><h4>pentagonal icositetrahedron</h4></Link>} />
               <NavTree elem={<Link><h4>pentagonal hexecontahedron</h4></Link>} />
-
 
             </NavTree>
 
