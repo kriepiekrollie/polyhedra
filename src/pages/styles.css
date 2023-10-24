@@ -7,6 +7,26 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Fira Mono', monospace;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:link {
+  font-color: #000088;
+}
+
+a:visited {
+  font-color: #550077;
+}
+
+a:hover {
+  font-color: #000088;
+  text-decoration: underline;
+}
+a:active {
+  font-color: #550077;
+}
+
 header {
   position: fixed;
 
