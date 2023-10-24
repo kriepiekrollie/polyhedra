@@ -1,6 +1,7 @@
-import { Octahedron_Triakis } from "./ShapeInterpolaters.js"
+import Octahedron from "./octahedron.js"
+import { kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = Octahedron_Triakis(6 * Math.sqrt(2) - 8);
+export const shapeObject = kleetopify(Octahedron, (Math.sqrt(2) - 1) * 3);
 
 export function Info() {
   return (

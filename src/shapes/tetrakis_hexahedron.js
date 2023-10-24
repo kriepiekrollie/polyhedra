@@ -1,6 +1,7 @@
-import { Cube_Tetrakis } from "./ShapeInterpolaters.js"
+import Hexahedron from "./hexahedron.js";
+import { kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = Cube_Tetrakis(0.5);
+export const shapeObject = kleetopify(Hexahedron, 1.5);
 
 export function Info() {
   return (

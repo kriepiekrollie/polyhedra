@@ -1,6 +1,7 @@
-import { Tetrahedron_Triakis } from "./ShapeInterpolaters.js"
+import Tetrahedron from "./tetrahedron.js";
+import { kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = Tetrahedron_Triakis(2.0 / 5.0);
+export const shapeObject = kleetopify(Tetrahedron, 9.0 / 5.0);
 
 export function Info() {
   return (

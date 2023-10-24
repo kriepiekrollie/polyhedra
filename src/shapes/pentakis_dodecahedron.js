@@ -1,13 +1,10 @@
-import { Dodecahedron_Pentakis } from "./ShapeInterpolaters.js"
+import Dodecahedron from "./dodecahedron.js";
+import { kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = (() => {
-  // these are too complicated to just put in a single expression lol.
-  const phi = (1 + Math.sqrt(5)) / 2;
-  const l0 = Math.sqrt(10 * Math.sqrt(5) + 25) / 5.0;
-  const l1 = Math.sqrt(1 + phi * phi);
-  const l = l1 * ((3 * phi + 12) / 19);
-  return Dodecahedron_Pentakis((l - l0) / (l1 - l0));
-})();
+const phi = (1 + Math.sqrt(5)) / 2;
+const l0 = Math.sqrt(10 * Math.sqrt(5) + 25) / 5.0;
+const l1 = Math.sqrt(1 + phi * phi) * ((3 * phi + 12) / 19);
+export const shapeObject = kleetopify(Dodecahedron, l1 / l0);
 
 export function Info() {
   return (

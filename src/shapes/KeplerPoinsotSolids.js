@@ -1,4 +1,4 @@
-import { ICOSAHEDRON } from "./PlatonicSolids.js"
+import { ICOSAHEDRON } from "./PlatonicSolids.js";
 
 export const GREAT_DODECAHEDRON = (() => {
   const phi = (1 + Math.sqrt(5)) / 2;

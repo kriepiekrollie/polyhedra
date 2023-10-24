@@ -3,6 +3,55 @@ function lerp(A, B, t) {
   return A + t * (B - A);
 }
 
+export function kleetopify(shapeObject, scalar) {
+  /* Takes as input a shape and moves the midpoints of the faces out by scalar ratio. */
+  /* !!! This won't work on all kleetopes, but helps me save time to code some shapes. */
+
+  const vertices = Array.from(shapeObject.Vertices);
+  const faces = [];
+
+  for (let face of shapeObject.Faces) {
+    var xm = 0.0;
+    var ym = 0.0;
+    var zm = 0.0;
+
+    for (let k of face) {
+      xm += vertices[k].x;
+      ym += vertices[k].y;
+      zm += vertices[k].z;
+    }
+
+    xm /= face.length;
+    ym /= face.length;
+    zm /= face.length;
+
+    xm *= scalar;
+    ym *= scalar;
+    zm *= scalar;
+
+    for (let i = 0; i < face.length; i++) {
+      faces.push([vertices.length, face[i], face[(i + 1) % face.length]]);
+    }
+
+    vertices.push({ x: xm, y: ym, z: zm });
+  }
+
+  var r = 0;
+  for (let vertex of vertices) {
+    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
+  }
+  for (let i = 0; i < vertices.length; i++) {
+    vertices[i].x /= r;
+    vertices[i].y /= r;
+    vertices[i].z /= r;
+  }
+
+  return {
+    Vertices: vertices,
+    Faces: faces,
+  };
+}
+
 export function Tetrahedron_Triakis(t) {
   const l = lerp(1 / 3, 1, t);
   const vertices = [
