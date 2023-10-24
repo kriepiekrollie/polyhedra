@@ -1,6 +1,10 @@
-html {
+body {
   scroll-snap-type: y mandatory;
   scroll-padding-top: 0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Fira Mono', monospace;
 }
 
 header {
@@ -27,7 +31,7 @@ header {
   align-content: center;
 
   h2 {
-    padding-left: 1em;
+    padding-left: 20px;
     margin: 0;
   }
 }
@@ -106,6 +110,10 @@ section:nth-child(even) {
 .shapeRenderer {
   width: 55%;
   aspect-ratio: 1 / 1;
+}
+
+.shapeCanvas {
+  touch-action:None;
 }
 
 @media screen and (max-width:900px) {
