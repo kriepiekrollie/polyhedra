@@ -41,72 +41,73 @@ nav {
 
   overflow-y: scroll;
 
-  div.navTreeContainer {
+  & div.navTreeContainer {
     position: relative;
     left: -4px;
     margin: 64px 0 0 0;
     padding: 0;
-  }
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    li {
+    & ul {
+      list-style: none;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      & li {
 
-      .expandButton, .lineSymbol {
-        height: 32px;
-        width: 32px;
-        display: flex;
-        flex-direction: row;
+        & .expandButton, & .lineSymbol {
+          height: 32px;
+          width: 32px;
+          display: flex;
+          flex-direction: row;
 
-        margin-right: 15px;
+          margin-right: 15px;
 
-        justify-content: center;
-        align-content: center;
-        align-items: center;
-        float: inline-start;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
+          float: left;
 
-        border-radius: 10px;
-      }
-      .expandButton {
-        cursor: pointer;
-        span {
+          border-radius: 10px;
+        }
+        & .expandButton {
           cursor: pointer;
+          span {
+            cursor: pointer;
+          }
         }
-      }
-      .expandButton:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-      }
-      .lineSymbol {
-        cursor: default;
-        span {
+        & .expandButton:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        & .lineSymbol {
           cursor: default;
+          & span {
+            cursor: default;
+          }
         }
-      }
 
-      h2 {
-        clear: none;
-      }
+        & a {
+          clear: none;
+        }
 
-      height: auto;
-      margin: 16px 0 0 0;
-      padding-left: 10px;
+        height: auto;
+        margin: 16px 0 0 0;
+        padding-left: 10px;
+      }
+      & li.hidden {
+        display: none;
+      }
     }
-    li.hidden {
-      display: none;
+    & a {
+      color: #000000;
     }
-  }
-  a {
-    color: #000000;
-  }
-  a:link {
-    color: #000000;
-  }
-  a:visited {
-    color: #000000;
-  }
-  h2 {
-    margin: 0;
+    & a:link {
+      color: #000000;
+    }
+    & a:visited {
+      color: #000000;
+    }
+    & h2 {
+      margin: 0;
+    }
   }
 }
 
@@ -134,7 +135,7 @@ header {
   align-content: center;
   align-items: center;
 
-  .navButton {
+  & .navButton {
     width: 48px;
     height: 48px;
     margin: 8px;
@@ -148,24 +149,24 @@ header {
     align-content: center;
 
     cursor: pointer;
-    span {
+    & span {
       cursor: pointer;
     }
   }
-  .navButton:hover {
+  & .navButton:hover {
     background-color: rgb(0, 0, 0, 0.1);
   }
-  a {
+  & a {
+    color: #000000;
+    & h2 {
+      margin: 0;
+    }
+  }
+  & a:link {
     color: #000000;
   }
-  a:link {
+  & a:visited {
     color: #000000;
-  }
-  a:visited {
-    color: #000000;
-  }
-  h2 {
-    margin: 0;
   }
 }
 
@@ -207,21 +208,21 @@ section:nth-child(even) {
 .sectionText {
   width: 45%;
 
-  h1 {
+  & h1 {
     font-size: 3em;
     margin: 0 0 15px 0;
   }
-  h2 {
+  & h2 {
     font-size: 1.5em;
     margin: 0 0 20px 0;
   }
-  p {
+  & p {
     overflow-wrap: break-word;
   }
-  table {
+  & table {
     overflow-wrap: normal;
     width: 50%;
-    th {
+    & th {
       text-align: left;
     }
   }
@@ -243,7 +244,7 @@ section:nth-child(even) {
   }
   .sectionText {
     width: 85%;
-    table {
+    & table {
       width: 80%;
     }
   }
