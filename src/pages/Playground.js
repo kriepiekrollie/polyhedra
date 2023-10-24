@@ -29,7 +29,7 @@ export default function Playground() {
     <>
       <div className="optionMenuContainer">
 
-        <h1> polyhedra </h1>
+        <h1> lol fix this </h1>
 
         <input className="optionMenuButton" id="optionMenuButton" type="checkbox" />
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 
 function cross(p, q) {
   // Returns the cross product of the vectors p and q.
@@ -58,8 +58,10 @@ function matmul(X, Y) {
 
 const FRAME_TIME = 10;
 
-function ShapeRenderer({ width, height, shape, wireframeMode }) {
+function ShapeRenderer({ shape, wireframeMode }) {
+  const containerRef = useRef(null);
   const canvasRef = useRef(null);
+  const [size, setSize] = useState(0);
 
   const glRef = useRef(0);
 
@@ -72,7 +74,6 @@ function ShapeRenderer({ width, height, shape, wireframeMode }) {
 
   const numFaceIndicesRef = useRef(0);
   const numEdgeIndicesRef = useRef(0);
-
   const [clicked, setClicked] = useState(false);
 
   const [t, setT] = useState(Date.now());
@@ -379,6 +380,12 @@ function ShapeRenderer({ width, height, shape, wireframeMode }) {
 
   // We run this code every time the element is redrawn.
   useEffect(() => {
+    const { width, height } = containerRef.current.getBoundingClientRect();
+    const newsize = Math.min(width, height);
+    if (size != newsize) {
+      setSize(newsize);
+    }
+
     const canvas = canvasRef.current;
     var gl = glRef.current;
 
@@ -395,7 +402,7 @@ function ShapeRenderer({ width, height, shape, wireframeMode }) {
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.enable(gl.DEPTH_TEST);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, size, size);
 
     if (wireframeMode) {
       gl.useProgram(edgeShaderProgram);
@@ -415,8 +422,6 @@ function ShapeRenderer({ width, height, shape, wireframeMode }) {
       gl.drawElements(gl.TRIANGLES, numFaceIndices, gl.UNSIGNED_SHORT, 0);
     }
 
-    glRef.current = gl;
-
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
@@ -427,6 +432,9 @@ function ShapeRenderer({ width, height, shape, wireframeMode }) {
     window.addEventListener('touchcancel', handleTouchEnd);
 
     const interval = setInterval(() => {
+      if (dx < 0.1 && dy < 0.1) {
+        clearInterval(interval);
+      }
       if (!clicked) {
         setDX(dx * 0.95);
         setDY(dy * 0.95);
@@ -449,8 +457,8 @@ function ShapeRenderer({ width, height, shape, wireframeMode }) {
   });
 
   return (
-    <div className="shapeContainer" style={{ width:width, height:height }}>
-      <canvas className="shape" ref={canvasRef} width={width} height={height}></canvas>
+    <div className="shapeRenderer" ref={containerRef}>
+      <canvas className="shapeCanvas" ref={canvasRef} width={size} height={size}></canvas>
     </div>
   );
 }

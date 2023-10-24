@@ -21,6 +21,9 @@ body::-webkit-scrollbar {
 }
 
 .optionMenuContainer {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
   position:inline;
   float:left;
 
@@ -106,8 +109,6 @@ body::-webkit-scrollbar {
 }
 
 .shapeContainer {
-  width:100%;
-  height:100%;
 }
 
 .shape {
@@ -123,6 +124,7 @@ button {
 
 @media screen and (max-width:900px) {
   .optionMenuContainer {
+    margin-top: 4em;
     width:100vw;
     height:auto;
 

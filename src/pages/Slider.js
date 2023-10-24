@@ -39,6 +39,7 @@ export default function Slider() {
       <input ref={slider} className="slider" type="range" min="0" max="100" onChange={handleSliderChange} />
       <div className="slider-article">
         <ShapeRenderer width={size} height={size} shape={shape} wireframe={false} />
+        <p>Yeah, I'm just putting the slider on top of the thing</p>
       </div>
     </>
   );
