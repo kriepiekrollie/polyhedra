@@ -54,7 +54,7 @@ nav {
       & li {
         height: auto;
         margin: 4px 0 0 0;
-        padding-left: 10px;
+        padding-left: 12px;
         overflow-y: hidden;
 
         display: flex;
@@ -64,20 +64,13 @@ nav {
         align-items: center;
         
         & .expandButton, & .lineSymbol {
-          height: 32px;
-          width: 32px;
-          display: flex;
-          flex-direction: row;
-
+          width: 24px;
+          height: 24px;
           margin-right: 15px;
-
-          justify-content: center;
-          align-content: center;
-          align-items: center;
-
-          border-radius: 10px;
         }
+
         & .expandButton {
+          border-radius: 10px;
           cursor: pointer;
           span {
             cursor: pointer;
