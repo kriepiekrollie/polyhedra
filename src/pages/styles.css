@@ -52,7 +52,17 @@ nav {
       margin: 0;
       padding: 0;
       & li {
+        height: auto;
+        margin: 4px 0 0 0;
+        padding-left: 10px;
+        overflow-y: hidden;
 
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        align-content: center;
+        align-items: center;
+        
         & .expandButton, & .lineSymbol {
           height: 32px;
           width: 32px;
@@ -64,7 +74,6 @@ nav {
           justify-content: center;
           align-content: center;
           align-items: center;
-          float: left;
 
           border-radius: 10px;
         }
@@ -78,6 +87,7 @@ nav {
           background-color: rgba(0, 0, 0, 0.1);
         }
         & .lineSymbol {
+          color: #888888;
           cursor: default;
           & span {
             cursor: default;
@@ -85,28 +95,21 @@ nav {
         }
 
         & a {
-          clear: none;
+          color: #000000;
+          & h1, & h2, & h3, & h4, & h5, & h6 {
+            margin: 0;
+          }
         }
-
-        height: auto;
-        margin: 16px 0 0 0;
-        padding-left: 10px;
+        & a:link {
+          color: #000000;
+        }
+        & a:visited {
+          color: #000000;
+        }
       }
       & li.hidden {
         display: none;
       }
-    }
-    & a {
-      color: #000000;
-    }
-    & a:link {
-      color: #000000;
-    }
-    & a:visited {
-      color: #000000;
-    }
-    & h2 {
-      margin: 0;
     }
   }
 }

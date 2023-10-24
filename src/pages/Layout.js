@@ -56,11 +56,11 @@ function Navbar({ hidden }) {
 
             <NavTree elem={<Link><h2>platonic solids</h2></Link>}>
 
-              <NavTree elem={<Link><h2>tetrahedron</h2></Link>} />
-              <NavTree elem={<Link><h2>hexahedron</h2></Link>} />
-              <NavTree elem={<Link><h2>octahedron</h2></Link>} />
-              <NavTree elem={<Link><h2>dodecahedron</h2></Link>} />
-              <NavTree elem={<Link><h2>icosahedron</h2></Link>} />
+              <NavTree elem={<Link><h3>tetrahedron</h3></Link>} />
+              <NavTree elem={<Link><h3>hexahedron</h3></Link>} />
+              <NavTree elem={<Link><h3>octahedron</h3></Link>} />
+              <NavTree elem={<Link><h3>dodecahedron</h3></Link>} />
+              <NavTree elem={<Link><h3>icosahedron</h3></Link>} />
 
             </NavTree>
 
