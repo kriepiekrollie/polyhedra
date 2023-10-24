@@ -5,7 +5,7 @@ function lerp(A, B, t) {
 
 export function Tetrahedron_Triakis(t) {
   const l = lerp(1 / 3, 1, t);
-  var vertices = [
+  const vertices = [
     { x : 1, y : 1, z : 1 },
     { x :-l, y : l, z : l },
     { x : l, y :-l, z : l },
@@ -46,7 +46,7 @@ export function Tetrahedron_Triakis(t) {
 
 export function Cube_Tetrakis(t) {
   const l = lerp(1.0, 2.0, t);
-  var vertices = [
+  const vertices = [
     { x : 1, y : 1, z : 1 },
     { x :-1, y : 1, z : 1 },
     { x : 1, y :-1, z : 1 },
@@ -107,7 +107,7 @@ export function Cube_Tetrakis(t) {
 
 export function Octahedron_Triakis(t) {
   const l = lerp(1.0 / 3.0, 0.5, t);
-  var vertices = [
+  const vertices = [
     { x : l, y : l, z : l },
     { x :-l, y : l, z : l },
     { x : l, y :-l, z : l },
@@ -178,7 +178,7 @@ export function Icosahedron_Triakis(t) {
   const b = p * l / l1;
   const c = q * l / l1;
 
-  var vertices = [
+  const vertices = [
     { x : 0, y : 1, z : p },
     { x : 0, y :-1, z : p },
     { x : 0, y : 1, z :-p },
@@ -308,7 +308,7 @@ export function Dodecahedron_Pentakis(t) {
   const u = 1 * l / l1;
   const v = p * l / l1;
 
-  var vertices = [
+  const vertices = [
     { x : 0, y : u, z : v },
     { x : 0, y :-u, z : v },
     { x : 0, y : u, z :-v },
@@ -429,7 +429,7 @@ export function Dodecahedron_Pentakis(t) {
 
 export function Cube_Truncate(t) {
   const l = lerp(1.0, 0.0, t);
-  var vertices = [
+  const vertices = [
     { x : l, y : 1, z : 1 },
     { x : 1, y : l, z : 1 },
     { x : 1, y : 1, z : l },
@@ -495,7 +495,7 @@ export function Cube_Truncate(t) {
 
 export function Octahedron_Truncate(t) {
   const l = lerp(0.0, 1.0, t);
-  var vertices = [
+  const vertices = [
     { x :-1, y :-l, z : 0 },
     { x :-1, y : 0, z :-l },
     { x :-1, y : 0, z : l },

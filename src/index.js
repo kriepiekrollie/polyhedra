@@ -7,9 +7,9 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./pages/Layout";
 import Homepage from "./pages/Homepage";
-import Playground from "./pages/Playground";
 import Slider from "./pages/Slider";
 import ShapeArticle from "./pages/ShapeArticle";
+import WorkInProgress from "./pages/wip.js";
 
 export default function App() {
   return (
@@ -18,8 +18,8 @@ export default function App() {
         <Route path="/" element={<Layout />}>
 
           <Route index element={<Homepage />} />
-          <Route path="/playground" element={<Playground />} />
           <Route path="/slider" element={<Slider />} />
+          <Route path="/wip" element={<WorkInProgress />} />
           <Route path="/shape/:shape" element={<ShapeArticle />} />
 
         </Route>
