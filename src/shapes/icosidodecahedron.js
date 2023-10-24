@@ -3,8 +3,8 @@ export const shapeObject = (() => {
   const p = (1 + Math.sqrt(5)) / 2;
 
   const a = 1 / 2;
-  const b = phi / 2;
-  const c = phi * phi / 2;
+  const b = p / 2;
+  const c = p * p / 2;
 
   const vertices = [
     { x : p, y : 0, z : 0 },
