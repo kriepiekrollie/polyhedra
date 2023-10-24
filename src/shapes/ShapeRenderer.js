@@ -73,7 +73,7 @@ function useOnScreen(ref) {
 }
 
 // Should I rename this to FRAME_TIME_MILLISECONDS ?
-const FRAME_TIME = 17;
+const FRAME_TIME = 10;
 
 function ShapeRenderer({ shape, wireframeMode }) {
   const containerRef = useRef(null);
