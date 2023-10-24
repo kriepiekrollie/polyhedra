@@ -1,6 +1,5 @@
-body {
+html {
   scroll-snap-type: y mandatory;
-  scroll-padding-top: 0px;
 }
 
 h1, h2, h3, h4, h5, h6 {
