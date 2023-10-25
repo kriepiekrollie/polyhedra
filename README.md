@@ -14,3 +14,23 @@ Maybe all the archimedean solids and the catalan solids? They are super duper co
 ## If you want to run this on your computer?
 
 clone it and run `npm install` and then `npm start` yay
+
+## todolist
+
+[x] Get the browser to draw 3d shapes with webgl
+
+[x] Platonic Solids
+
+[ ] Catalan Solids
+
+[ ] Archimedean Solids
+
+[ ] Convex Deltahedra
+
+[ ] More information about the shapes
+
+[ ] Pages to play with sliders to warp between similar shapes
+
+[ ] Options for different projection matrices and shader code
+
+[ ] Test performance
