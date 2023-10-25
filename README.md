@@ -17,20 +17,20 @@ clone it and run `npm install` and then `npm start` yay
 
 ## todolist
 
-[x] Get the browser to draw 3d shapes with webgl
+- [x] Get the browser to draw 3d shapes with webgl
 
-[x] Platonic Solids
+- [x] Platonic Solids
 
-[ ] Catalan Solids
+- [ ] Catalan Solids
 
-[ ] Archimedean Solids
+- [ ] Archimedean Solids
 
-[ ] Convex Deltahedra
+- [ ] Convex Deltahedra
 
-[ ] More information about the shapes
+- [ ] More information about the shapes
 
-[ ] Pages to play with sliders to warp between similar shapes
+- [ ] Pages to play with sliders to warp between similar shapes
 
-[ ] Options for different projection matrices and shader code
+- [ ] Options for different projection matrices and shader code
 
-[ ] Test performance
+- [ ] Test performance
