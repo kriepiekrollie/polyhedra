@@ -14,19 +14,19 @@ import * as Cuboctahedron from "../shapes/cuboctahedron.js";
 import * as Icosidodecahedron from "../shapes/icosidodecahedron.js";
 
 import * as Rhombicuboctahedron from "../shapes/rhombicuboctahedron.js";
-// import * as Rhombicosidodecahedron from "../shapes/rhombicosidodecahedron.js";
+import * as Rhombicosidodecahedron from "../shapes/rhombicosidodecahedron.js";
 
-// import * as SnubCube from "../shapes/snub_cube.js";
+import * as SnubCube from "../shapes/snub_cube.js";
 // import * as SnubDodecahedron from "../shapes/snub_dodecahedron.js";
 
-// import * as TruncatedTetrahedron from "../shapes/truncated_tetrahedron.js";
+import * as TruncatedTetrahedron from "../shapes/truncated_tetrahedron.js";
 import * as TruncatedHexahedron from "../shapes/truncated_hexahedron.js";
 import * as TruncatedOctahedron from "../shapes/truncated_octahedron.js";
-// import * as TruncatedDodecahedron from "../shapes/truncated_dodecahedron.js";
-// import * as TruncatedIcosahedron from "../shapes/truncated_icosahedron.js";
+import * as TruncatedDodecahedron from "../shapes/truncated_dodecahedron.js";
+import * as TruncatedIcosahedron from "../shapes/truncated_icosahedron.js";
 
-// import * as TruncatedCuboctahedron from "../shapes/truncated_cuboctahedron.js";
-// import * as TruncatedIcosidodecahedron from "../shapes/truncated_icosidodecahedron.js";
+import * as TruncatedCuboctahedron from "../shapes/truncated_cuboctahedron.js";
+import * as TruncatedIcosidodecahedron from "../shapes/truncated_icosidodecahedron.js";
 
 /* Catalan Solids */
 import * as RhombicDodecahedron from "../shapes/rhombic_dodecahedron.js";
@@ -38,10 +38,10 @@ import * as TriakisOctahedron from "../shapes/triakis_octahedron.js";
 import * as PentakisDodecahedron from "../shapes/pentakis_dodecahedron.js";
 import * as TriakisIcosahedron from "../shapes/triakis_icosahedron.js";
 
-// import * as DisdyakisDodecahedron from "../shapes/disdyakis_dodecahedron.js";
+import * as DisdyakisDodecahedron from "../shapes/disdyakis_dodecahedron.js";
 import * as DisdyakisTriacontahedron from "../shapes/disdyakis_triacontahedron.js";
 
-// import * as DeltoidalIcositetrahedron from "../shapes/deltoidal_icositetrahedron.js";
+import * as DeltoidalIcositetrahedron from "../shapes/deltoidal_icositetrahedron.js";
 import * as DeltoidalHexecontahedron from "../shapes/deltoidal_hexecontahedron.js";
 
 // import * as PentagonalIcositetrahedron from "../shapes/pentagonal_icositetrahedron.js";
@@ -90,26 +90,26 @@ function getShapeData(shape)
         Info: Rhombicuboctahedron.Info,
         shapeObject: Rhombicuboctahedron.shapeObject,
       };
-    // case "rhombicosidodecahedron":
-    //   return {
-    //     Info: Rhombicosidodecahedron.Info,
-    //     shapeObject: Rhombicosidodecahedron.shapeObject,
-    //   };
-    // case "snub_cube":
-    //   return {
-    //     Info: SnubCube.Info,
-    //     shapeObject: SnubCube.shapeObject,
-    //   };
+    case "rhombicosidodecahedron":
+      return {
+        Info: Rhombicosidodecahedron.Info,
+        shapeObject: Rhombicosidodecahedron.shapeObject,
+      };
+    case "snub_cube":
+      return {
+        Info: SnubCube.Info,
+        shapeObject: SnubCube.shapeObject,
+      };
     // case "snub_dodecahedron":
     //   return {
     //     Info: SnubDodecahedron.Info,
     //     shapeObject: SnubDodecahedron.shapeObject,
     //   };
-    // case "truncated_tetrahedron":
-    //   return {
-    //     Info: TruncatedTetrahedron.Info,
-    //     shapeObject: TruncatedTetrahedron.shapeObject,
-    //   };
+    case "truncated_tetrahedron":
+      return {
+        Info: TruncatedTetrahedron.Info,
+        shapeObject: TruncatedTetrahedron.shapeObject,
+      };
     case "truncated_hexahedron":
       return {
         Info: TruncatedHexahedron.Info,
@@ -120,26 +120,26 @@ function getShapeData(shape)
         Info: TruncatedOctahedron.Info,
         shapeObject: TruncatedOctahedron.shapeObject,
       };
-    // case "truncated_dodecahedron":
-    //   return {
-    //     Info: TruncatedDodecahedron.Info,
-    //     shapeObject: TruncatedDodecahedron.shapeObject,
-    //   };
-    // case "truncated_icosahedron":
-    //   return {
-    //     Info: TruncatedIcosahedron.Info,
-    //     shapeObject: TruncatedIcosahedron.shapeObject,
-    //   };
-    // case "truncated_cuboctahedron":
-    //   return {
-    //     Info: TruncatedCuboctahedron.Info,
-    //     shapeObject: TruncatedCuboctahedron.shapeObject,
-    //   };
-    // case "truncated_icosidodecahedron":
-    //   return {
-    //     Info: TruncatedIcosidodecahedron.Info,
-    //     shapeObject: TruncatedIcosidodecahedron.shapeObject,
-    //   };
+    case "truncated_dodecahedron":
+      return {
+        Info: TruncatedDodecahedron.Info,
+        shapeObject: TruncatedDodecahedron.shapeObject,
+      };
+    case "truncated_icosahedron":
+      return {
+        Info: TruncatedIcosahedron.Info,
+        shapeObject: TruncatedIcosahedron.shapeObject,
+      };
+    case "truncated_cuboctahedron":
+      return {
+        Info: TruncatedCuboctahedron.Info,
+        shapeObject: TruncatedCuboctahedron.shapeObject,
+      };
+    case "truncated_icosidodecahedron":
+      return {
+        Info: TruncatedIcosidodecahedron.Info,
+        shapeObject: TruncatedIcosidodecahedron.shapeObject,
+      };
     case "rhombic_dodecahedron":
       return {
         Info: RhombicDodecahedron.Info,
@@ -175,21 +175,21 @@ function getShapeData(shape)
         Info: TriakisIcosahedron.Info,
         shapeObject: TriakisIcosahedron.shapeObject,
       };
-    // case "disdyakis_dodecahedron":
-    //   return {
-    //     Info: DisdyakisDodecahedron.Info,
-    //     shapeObject: DisdyakisDodecahedron.shapeObject,
-    //   };
+    case "disdyakis_dodecahedron":
+      return {
+        Info: DisdyakisDodecahedron.Info,
+        shapeObject: DisdyakisDodecahedron.shapeObject,
+      };
     case "disdyakis_triacontahedron":
       return {
         Info: DisdyakisTriacontahedron.Info,
         shapeObject: DisdyakisTriacontahedron.shapeObject,
       };
-    // case "deltoidal_icositetrahedron":
-    //   return {
-    //     Info: DeltoidalIcositetrahedron.Info,
-    //     shapeObject: DeltoidalIcositetrahedron.shapeObject,
-    //   };
+    case "deltoidal_icositetrahedron":
+      return {
+        Info: DeltoidalIcositetrahedron.Info,
+        shapeObject: DeltoidalIcositetrahedron.shapeObject,
+      };
     case "deltoidal_hexecontahedron":
       return {
         Info: DeltoidalHexecontahedron.Info,

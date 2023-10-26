@@ -64,16 +64,16 @@ function Navbar({ hidden }) {
               <NavTree elem={<Link to="/shape/icosidodecahedron"><h4>icosidodecahedron</h4></Link>} />
 
               <NavTree elem={<Link to="/shape/rhombicuboctahedron"><h4>rhombicuboctahedron</h4></Link>} />
-              <NavTree elem={<Link to="/wip"><h4>rhombicosidodecahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/rhombicosidodecahedron"><h4>rhombicosidodecahedron</h4></Link>} />
 
-              <NavTree elem={<Link to="/wip"><h4>snub cube</h4></Link>} />
+              <NavTree elem={<Link to="/shape/snub_cube"><h4>snub cube</h4></Link>} />
               <NavTree elem={<Link to="/wip"><h4>snub dodecahedron</h4></Link>} />
 
-              <NavTree elem={<Link to="/wip"><h4>truncated tetrahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/truncated_tetrahedron"><h4>truncated tetrahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/truncated_hexahedron"><h4>truncated hexahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/truncated_octahedron"><h4>truncated octahedron</h4></Link>} />
-              <NavTree elem={<Link to="/wip"><h4>truncated dodecahedron</h4></Link>} />
-              <NavTree elem={<Link to="/wip"><h4>truncated icosahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/truncated_dodecahedron"><h4>truncated dodecahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/truncated_icosahedron"><h4>truncated icosahedron</h4></Link>} />
 
               <NavTree elem={<Link to="/wip"><h4>truncated cuboctahedron</h4></Link>} />
               <NavTree elem={<Link to="/wip"><h4>truncated icosidodecahedron</h4></Link>} />
@@ -91,10 +91,10 @@ function Navbar({ hidden }) {
               <NavTree elem={<Link to="/shape/pentakis_dodecahedron"><h4>pentakis dodecahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/triakis_icosahedron"><h4>triakis icosahedron</h4></Link>} />
 
-              <NavTree elem={<Link to="/wip"><h4>disdyakis dodecahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/disdyakis_dodecahedron"><h4>disdyakis dodecahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/disdyakis_triacontahedron"><h4>disdyakis triacontahedron</h4></Link>} />
 
-              <NavTree elem={<Link to="/wip"><h4>deltoidal icositetrahedron</h4></Link>} />
+              <NavTree elem={<Link to="/shape/deltoidal_icositetrahedron"><h4>deltoidal icositetrahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/deltoidal_hexecontahedron"><h4>deltoidal hexecontahedron</h4></Link>} />
 
               <NavTree elem={<Link to="/wip"><h4>pentagonal icositetrahedron</h4></Link>} />

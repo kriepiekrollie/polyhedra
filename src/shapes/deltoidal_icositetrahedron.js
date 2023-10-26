@@ -1,6 +1,3 @@
-import Dodecahedron from "./dodecahedron.js";
-import Icosahedron from "./icosahedron.js";
-import Icosidodecahedron from "./icosidodecahedron.js";
 
 function distance(A, B) {
   const dx = B.x - A.x;
@@ -10,91 +7,87 @@ function distance(A, B) {
 }
 
 export const shapeObject = (() => {
-  const vertices = [];
-  for (let vertex of Icosahedron.Vertices) {
-    vertices.push(vertex);
+  const a = Math.sqrt(2) / 2;
+  const b = (2 * Math.sqrt(2) + 1) / 7;
+
+  const vertices = [
+    { x : b, y : b, z : b },
+    { x : b, y : b, z :-b },
+    { x : b, y :-b, z : b },
+    { x : b, y :-b, z :-b },
+    { x :-b, y : b, z : b },
+    { x :-b, y : b, z :-b },
+    { x :-b, y :-b, z : b },
+    { x :-b, y :-b, z :-b },
+
+    { x : 1, y : 0, z : 0 },
+    { x :-1, y : 0, z : 0 },
+    { x : 0, y : 1, z : 0 },
+    { x : 0, y :-1, z : 0 },
+    { x : 0, y : 0, z : 1 },
+    { x : 0, y : 0, z :-1 },
+
+    { x : 0, y : a, z : a },
+    { x : 0, y : a, z :-a },
+    { x : 0, y :-a, z : a },
+    { x : 0, y :-a, z :-a },
+
+    { x : a, y : 0, z : a },
+    { x :-a, y : 0, z : a },
+    { x : a, y : 0, z :-a },
+    { x :-a, y : 0, z :-a },
+
+    { x : a, y : a, z : 0 },
+    { x : a, y :-a, z : 0 },
+    { x :-a, y : a, z : 0 },
+    { x :-a, y :-a, z : 0 },
+  ];
+  var r = 0;
+  for (let vertex of vertices) {
+    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
   }
-  const scalar_dodecahedron = 3 / 11 * Math.sqrt(15 - 6 / Math.sqrt(5));
-  for (let vertex of Dodecahedron.Vertices) {
-    vertices.push({
-      x: vertex.x * scalar_dodecahedron,
-      y: vertex.y * scalar_dodecahedron,
-      z: vertex.z * scalar_dodecahedron,
-    });
-  }
-  const scalar_icosidodecahedron = 3 * Math.sqrt(1 - 2 / Math.sqrt(5));
-  for (let vertex of Icosidodecahedron.Vertices) {
-    vertices.push({
-      x: vertex.x * scalar_icosidodecahedron,
-      y: vertex.y * scalar_icosidodecahedron,
-      z: vertex.z * scalar_icosidodecahedron,
-    });
+  for (let i = 0; i < vertices.length; i++) {
+    vertices[i].x /= r;
+    vertices[i].y /= r;
+    vertices[i].z /= r;
   }
   const faces = [
-    [28, 36, 0, 35], // 0
-    [28, 35, 8, 44], // 1
-    [28, 44, 2, 36], // 2
-    [12, 35, 0, 34], // 3
-    [12, 34, 4, 51], // 4
-    [12, 51, 8, 35], // 5
-    [24, 34, 0, 33], // 6
-    [24, 33, 6, 52], // 7
-    [24, 52, 4, 34], // 8
-    [14, 33, 0, 32], // 9
-    [14, 32, 9, 57], // 10
-    [14, 57, 6, 33], // 11
-    [30, 32, 0, 36], // 12
-    [30, 36, 2, 43], // 13
-    [30, 43, 9, 32], // 14
-    [15, 45, 2, 44], // 15
-    [15, 44, 8, 54], // 16
-    [15, 54, 5, 45], // 17
-    [22, 60, 10, 55], // 18
-    [22, 55, 5, 54], // 19
-    [22, 54, 8, 60], // 20
-    [20, 60, 8, 51], // 21
-    [20, 51, 4, 50], // 22
-    [20, 50, 10, 60], // 23
-    [13, 38, 10, 50], // 24
-    [13, 50, 4, 39], // 25
-    [13, 39, 1, 38], // 26
-    [26, 39, 4, 52], // 27
-    [26, 52, 6, 40], // 28
-    [26, 40, 1, 39], // 29
-    [18, 41, 1, 40], // 30
-    [18, 40, 6, 56], // 31
-    [18, 56, 11, 41], // 32
-    [21, 56, 6, 57], // 33
-    [21, 57, 9, 61], // 34
-    [21, 61, 11, 56], // 35
-    [23, 58, 11, 61], // 36
-    [23, 61, 9, 59], // 37
-    [23, 59, 7, 58], // 38
-    [16, 59, 9, 43], // 39
-    [16, 43, 2, 42], // 40
-    [16, 42, 7, 59], // 41
-    [25, 42, 2, 45], // 42
-    [25, 45, 5, 53], // 43
-    [25, 53, 7, 42], // 44
-    [29, 37, 3, 49], // 45
-    [29, 49, 10, 38], // 46
-    [29, 38, 1, 37], // 47
-    [17, 49, 3, 48], // 48
-    [17, 48, 5, 55], // 49
-    [17, 55, 10, 49], // 50
-    [27, 48, 3, 47], // 51
-    [27, 47, 7, 53], // 52
-    [27, 53, 5, 48], // 53
-    [19, 47, 3, 46], // 54
-    [19, 46, 11, 58], // 55
-    [19, 58, 7, 47], // 56
-    [31, 46, 3, 37], // 57
-    [31, 37, 1, 41], // 58
-    [31, 41, 11, 46], // 59
+    [8, 18, 0, 22], // 0
+    [8, 22, 1, 20], // 1
+    [8, 20, 3, 23], // 2
+    [8, 23, 2, 18], // 3
+    [12, 14, 0, 18], // 4
+    [12, 18, 2, 16], // 5
+    [12, 16, 6, 19], // 6
+    [12, 19, 4, 14], // 7
+    [9, 24, 4, 19], // 8
+    [9, 19, 6, 25], // 9
+    [9, 25, 7, 21], // 10
+    [9, 21, 5, 24], // 11
+    [13, 15, 5, 21], // 12
+    [13, 21, 7, 17], // 13
+    [13, 17, 3, 20], // 14
+    [13, 20, 1, 15], // 15
+    [10, 22, 0, 14], // 16
+    [10, 14, 4, 24], // 17
+    [10, 24, 5, 15], // 18
+    [10, 15, 1, 22], // 19
+    [11, 16, 2, 23], // 20
+    [11, 23, 3, 17], // 21
+    [11, 17, 7, 25], // 22
+    [11, 25, 6, 16], // 23
   ];
   /*
   // I should be embarrassed this might be the most cursed thing I've done.
-  for (let face of Icosahedron.Faces) {
+  const cubeFaces = [
+    [0, 1, 3, 2],
+    [0, 2, 6, 4],
+    [4, 6, 7, 5],
+    [5, 7, 3, 1],
+    [0, 4, 5, 1],
+    [2, 3, 7, 6],
+  ];
+  for (let face of cubeFaces) {
     var mid = { x: 0, y: 0, z: 0 };
     for (let k of face) {
       mid.x += vertices[k].x;
@@ -106,7 +99,7 @@ export const shapeObject = (() => {
     mid.z /= face.length;
     // Find the closest point the midpoint of this face.
     var closestFaceMid = 0;
-    for (let k = 0; k < 62; k++) {
+    for (let k = 0; k < 26; k++) {
       if (distance(vertices[k], mid) < distance(vertices[closestFaceMid], mid)) {
         closestFaceMid = k;
       }
@@ -126,7 +119,7 @@ export const shapeObject = (() => {
       };
       var closestEdgeMid1 = 0;
       var closestEdgeMid2 = 0;
-      for (let k = 0; k < 62; k++) {
+      for (let k = 0; k < 26; k++) {
         if (distance(vertices[k], midEdge1) < distance(vertices[closestEdgeMid1], midEdge1)) {
           closestEdgeMid1 = k;
         }

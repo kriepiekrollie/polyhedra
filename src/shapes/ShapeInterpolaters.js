@@ -5,7 +5,7 @@ function lerp(A, B, t) {
 
 export function kleetopify(shapeObject, scalar) {
   /* Takes as input a shape and moves the midpoints of the faces out by scalar ratio. */
-  /* !!! This won't work on all kleetopes, but helps me save time to code some shapes. */
+  /* !!! This won't work for all kleetopes, but helps me save time to code some shapes. */
 
   const vertices = Array.from(shapeObject.Vertices);
   const faces = [];
@@ -36,6 +36,157 @@ export function kleetopify(shapeObject, scalar) {
     vertices.push({ x: xm, y: ym, z: zm });
   }
 
+  var r = 0;
+  for (let vertex of vertices) {
+    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
+  }
+  for (let i = 0; i < vertices.length; i++) {
+    vertices[i].x /= r;
+    vertices[i].y /= r;
+    vertices[i].z /= r;
+  }
+
+  return {
+    Vertices: vertices,
+    Faces: faces,
+  };
+}
+
+export function Truncate(shapeObject, t = 2 / 3) {
+  // Horrendous code but it works.
+  const vertices = [];
+  const faces = [];
+
+  const edgeMap = [];
+  for (let i = 0; i < shapeObject.Faces.length; i++) {
+    edgeMap.push(new Map());
+  }
+
+  for (let i = 0; i < shapeObject.Vertices.length; i++) {
+    const mp = new Map();
+    var start = -1;
+    for (let j = 0; j < shapeObject.Faces.length; j++) {
+      const face = shapeObject.Faces[j];
+      const idx = face.indexOf(i);
+      if (idx === -1) {
+        continue;
+      }
+      const a = face[(idx + 1) % face.length];
+      const b = face[(idx + face.length - 1) % face.length];
+      mp.set(a, [b, j]);
+      start = [b, j];
+    }
+    if (!mp.has(start[0])) {
+      continue;
+    }
+    const tempv = start[1];
+    const temp = vertices.length;
+    const newface = [vertices.length];
+    vertices.push({
+      x : lerp(shapeObject.Vertices[i].x, shapeObject.Vertices[start[0]].x, t / 2),
+      y : lerp(shapeObject.Vertices[i].y, shapeObject.Vertices[start[0]].y, t / 2),
+      z : lerp(shapeObject.Vertices[i].z, shapeObject.Vertices[start[0]].z, t / 2),
+    });
+    for (let edge = mp.get(start[0]); edge[0] != start[0] || edge[1] != start[1]; edge = mp.get(edge[0])) {
+      const j = edge[0];
+      edgeMap[edge[1]].set(i, [vertices.length, vertices.length - 1]);
+      newface.push(vertices.length);
+      vertices.push({
+        x : lerp(shapeObject.Vertices[i].x, shapeObject.Vertices[j].x, t / 2),
+        y : lerp(shapeObject.Vertices[i].y, shapeObject.Vertices[j].y, t / 2),
+        z : lerp(shapeObject.Vertices[i].z, shapeObject.Vertices[j].z, t / 2),
+      });
+    }
+    edgeMap[tempv].set(i, [temp, vertices.length - 1]);
+    faces.push(newface);
+  }
+
+  for (let j = 0; j < shapeObject.Faces.length; j++) {
+    const newface = [];
+    for (let k of shapeObject.Faces[j]) {
+      if (!edgeMap[j].has(k)) {
+        continue;
+      }
+      const [a, b] = edgeMap[j].get(k);
+      newface.push(a);
+      newface.push(b);
+    }
+    faces.push(newface);
+  }
+  var r = 0;
+  for (let vertex of vertices) {
+    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
+  }
+  for (let i = 0; i < vertices.length; i++) {
+    vertices[i].x /= r;
+    vertices[i].y /= r;
+    vertices[i].z /= r;
+  }
+
+  return {
+    Vertices: vertices,
+    Faces: faces,
+  };
+}
+
+export function Rectify(shapeObject) {
+  // Horrendous code but it works.
+  const vertices = [];
+  const faces = [];
+
+  const edgeMap = [];
+  for (let i = 0; i < shapeObject.Vertices.length; i++) {
+    edgeMap.push(new Map());
+  }
+
+  function Midpoint(a, b) {
+    if (a > b) {
+      [a, b] = [b, a];
+    }
+    if (edgeMap[a].has(b)) {
+      return edgeMap[a].get(b);
+    }
+    edgeMap[a].set(b, vertices.length);
+    vertices.push({
+      x: (shapeObject.Vertices[a].x + shapeObject.Vertices[b].x) / 2,
+      y: (shapeObject.Vertices[a].y + shapeObject.Vertices[b].y) / 2,
+      z: (shapeObject.Vertices[a].z + shapeObject.Vertices[b].z) / 2,
+    });
+    return vertices.length - 1;
+  }
+
+  for (let i = 0; i < shapeObject.Vertices.length; i++) {
+    const mp = new Map();
+    var start = -1;
+    for (let j = 0; j < shapeObject.Faces.length; j++) {
+      const face = shapeObject.Faces[j];
+      const idx = face.indexOf(i);
+      if (idx === -1) {
+        continue;
+      }
+      const a = face[(idx + 1) % face.length];
+      const b = face[(idx + face.length - 1) % face.length];
+      mp.set(a, b);
+      start = b;
+    }
+    if (!mp.has(start)) {
+      continue;
+    }
+    const newface = [Midpoint(i, start)];
+    for (let j = mp.get(start); j != start; j = mp.get(j)) {
+      newface.push(Midpoint(i, j));
+    }
+    faces.push(newface);
+  }
+
+  for (let face of shapeObject.Faces) {
+    const newface = [];
+    for (let i = 0; i < face.length; i++) {
+      const j = (i + 1) % face.length;
+      newface.push(Midpoint(face[i], face[j]));
+    }
+    faces.push(newface);
+  }
   var r = 0;
   for (let vertex of vertices) {
     r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));

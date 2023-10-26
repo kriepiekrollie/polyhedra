@@ -3,21 +3,21 @@ export const shapeObject = (() => {
   const r = 1 / Math.sqrt(3);
   const vertices = [
     { x : r, y : r, z : r },
-    { x :-r, y : r, z : r },
-    { x : r, y :-r, z : r },
     { x : r, y : r, z :-r },
+    { x : r, y :-r, z : r },
     { x : r, y :-r, z :-r },
+    { x :-r, y : r, z : r },
     { x :-r, y : r, z :-r },
     { x :-r, y :-r, z : r },
     { x :-r, y :-r, z :-r },
   ];
   const faces = [
-    [0, 2, 6, 1],
-    [3, 5, 7, 4],
-    [0, 3, 4, 2],
-    [1, 6, 7, 5],
-    [0, 1, 5, 3],
-    [2, 4, 7, 6],
+    [0, 1, 3, 2],
+    [0, 2, 6, 4],
+    [4, 6, 7, 5],
+    [5, 7, 3, 1],
+    [0, 4, 5, 1],
+    [2, 3, 7, 6],
   ];
   return {
     Vertices:vertices,

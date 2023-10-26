@@ -1,6 +1,7 @@
-import { Octahedron_Truncate } from "./ShapeInterpolaters.js";
+import Octahedron from "./octahedron.js";
+import { Truncate } from "./ShapeInterpolaters.js";
 
-export const shapeObject = Octahedron_Truncate(0.5);
+export const shapeObject = Truncate(Octahedron);
 
 export function Info() {
   return (
