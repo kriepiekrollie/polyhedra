@@ -127,8 +127,8 @@ function ShapeRenderer({ shape, wireframeMode }) {
       "varying vec4 vColor;" +
       "void main(void) {" +
       "  gl_Position = projection_matrix * rotation_matrix * vec4(vertex_pos, 1.0);" +
-      "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -2.0, 3.0, 0.0))));" +
-      "  float y = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(2.0, 1.0, -1.0, 0.0))));" +
+      "  float x = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(1.0, -2.0, 1.0, 0.0))));" +
+      "  float y = 0.5 * (1.0 + dot(rotation_matrix * vec4(normal, 0.0), normalize(vec4(2.0, 1.0, -0.8, 0.0))));" +
       "  vColor = vec4(x, y, 1.0 - x, 0.8);" +
       "}";
 
