@@ -1,3 +1,4 @@
+import { Truncate } from "./ShapeInterpolaters.js";
 
 /*
 function dot(A, B) {

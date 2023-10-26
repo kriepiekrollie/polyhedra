@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import ShapeRenderer from "../shapes/ShapeRenderer.js";
 
@@ -223,12 +223,27 @@ export default function ShapeArticle() {
 
   const { Info, shapeObject } = getShapeData(routeParams.shape);
 
+  const [wireframe, setWireframe] = useState(false);
+
   return (
     <section>
       <div className="sectionContent">
-        <ShapeRenderer shape={shapeObject} wireframeMode={false} />
+        <ShapeRenderer shape={shapeObject} wireframeMode={wireframe} />
         <div className="sectionText">
           <Info />
+          <div className="WireframeToggle" onClick={() => setWireframe(!wireframe)}> 
+            {
+              wireframe ? (
+              <span className="material-symbols-outlined">
+                check_box
+              </span> ) : (
+              <span className="material-symbols-outlined">
+                check_box_outline_blank
+              </span>
+              )
+            } 
+            <div>wireframe mode</div>
+          </div>
         </div>
       </div>
     </section>

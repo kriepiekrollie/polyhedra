@@ -151,8 +151,8 @@ export const shapeObject = (() => {
 export function Info() {
   return (
     <>
-      <h1> Deltoidal Icositetrahedron </h1>
-      <h2> <a href="https://en.wikipedia.org/wiki/Deltoidal_icositetrahedron"> Wikipedia page </a> </h2>
+      <h1> Deltoidal Hexecontahedron </h1>
+      <h2> <a href="https://en.wikipedia.org/wiki/Deltoidal_hexecontahedron"> Wikipedia page </a> </h2>
       <p> woah </p>
       <table>
         <tbody>
@@ -162,15 +162,15 @@ export function Info() {
           </tr>
           <tr>
             <th> Faces </th>
-            <td> 24 </td>
+            <td> 60 </td>
           </tr>
           <tr>
             <th> Edges </th>
-            <td> 24 </td>
+            <td> 120 </td>
           </tr>
           <tr>
             <th> Vertices </th>
-            <td> 26 </td>
+            <td> 62 </td>
           </tr>
         </tbody>
       </table>

@@ -159,7 +159,7 @@ export function Info() {
           </tr>
           <tr>
             <th> Edges </th>
-            <td> 24 </td>
+            <td> 48 </td>
           </tr>
           <tr>
             <th> Vertices </th>

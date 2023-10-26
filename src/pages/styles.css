@@ -222,6 +222,21 @@ section:nth-child(even) {
       text-align: left;
     }
   }
+  & .WireframeToggle {
+    margin: 3px;
+    padding: 6px;
+    width: max-content;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    border-radius: 15px;
+    & div {
+      margin: 0 7px;
+    }
+  }
+  & .WireframeToggle:hover {
+    background-color: rgba(200, 200, 200, 0.8);
+  }
 }
 
 .shapeRenderer {
