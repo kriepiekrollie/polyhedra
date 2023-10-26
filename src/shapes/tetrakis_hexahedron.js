@@ -1,7 +1,7 @@
 import Hexahedron from "./hexahedron.js";
-import { kleetopify } from "./ShapeInterpolaters.js";
+import { Kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = kleetopify(Hexahedron, 1.5);
+export const shapeObject = Kleetopify(Hexahedron, 1.5);
 
 export function Info() {
   return (

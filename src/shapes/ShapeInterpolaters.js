@@ -3,12 +3,20 @@ function lerp(A, B, t) {
   return A + t * (B - A);
 }
 
-export function kleetopify(shapeObject, scalar) {
+export function Kleetopify(shapeObject, scalar) {
   /* Takes as input a shape and moves the midpoints of the faces out by scalar ratio. */
   /* !!! This won't work for all kleetopes, but helps me save time to code some shapes. */
 
-  const vertices = Array.from(shapeObject.Vertices);
+  const vertices = [];
   const faces = [];
+
+  for (let vertex of shapeObject.Vertices) {
+    vertices.push({
+      x: vertex.x,
+      y: vertex.y,
+      z: vertex.z,
+    });
+  }
 
   for (let face of shapeObject.Faces) {
     var xm = 0.0;
@@ -25,20 +33,17 @@ export function kleetopify(shapeObject, scalar) {
     ym /= face.length;
     zm /= face.length;
 
-    xm *= scalar;
-    ym *= scalar;
-    zm *= scalar;
-
     for (let i = 0; i < face.length; i++) {
       faces.push([vertices.length, face[i], face[(i + 1) % face.length]]);
     }
 
-    vertices.push({ x: xm, y: ym, z: zm });
+    vertices.push({ x: xm * scalar, y: ym * scalar, z: zm * scalar });
   }
 
+
   var r = 0;
-  for (let vertex of vertices) {
-    r = Math.max(r, Math.sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
+  for (let i = 0; i < vertices.length; i++) {
+    r = Math.max(r, Math.sqrt(vertices[i].x * vertices[i].x + vertices[i].y * vertices[i].y + vertices[i].z * vertices[i].z));
   }
   for (let i = 0; i < vertices.length; i++) {
     vertices[i].x /= r;

@@ -1,10 +1,10 @@
 import Dodecahedron from "./dodecahedron.js";
-import { kleetopify } from "./ShapeInterpolaters.js";
+import { Kleetopify } from "./ShapeInterpolaters.js";
 
 const phi = (1 + Math.sqrt(5)) / 2;
 const l0 = Math.sqrt(10 * Math.sqrt(5) + 25) / 5.0;
 const l1 = Math.sqrt(1 + phi * phi) * ((3 * phi + 12) / 19);
-export const shapeObject = kleetopify(Dodecahedron, l1 / l0);
+export const shapeObject = Kleetopify(Dodecahedron, l1 / l0);
 
 export function Info() {
   return (

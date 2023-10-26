@@ -18,9 +18,9 @@ export default function App() {
         <Route path="/" element={<Layout />}>
 
           <Route index element={<Homepage />} />
-          <Route path="/slider" element={<Slider />} />
-          <Route path="/wip" element={<WorkInProgress />} />
           <Route path="/shape/:shape" element={<ShapeArticle />} />
+          <Route path="/slider/:slider" element={<Slider />} />
+          <Route path="/wip" element={<WorkInProgress />} />
 
         </Route>
       </Routes>

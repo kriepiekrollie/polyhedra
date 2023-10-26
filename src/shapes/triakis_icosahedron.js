@@ -1,10 +1,10 @@
 import Icosahedron from "./icosahedron.js";
-import { kleetopify } from "./ShapeInterpolaters.js";
+import { Kleetopify } from "./ShapeInterpolaters.js";
 
 const phi = (1 + Math.sqrt(5)) / 2;
 const l0 = (3 * Math.sqrt(3) + Math.sqrt(15)) / 6;
 const l1 = Math.sqrt((75 + 6 * Math.sqrt(5)) * (phi * phi + 1)) / 11;
-export const shapeObject = kleetopify(Icosahedron, l1 / l0);
+export const shapeObject = Kleetopify(Icosahedron, l1 / l0);
 
 export function Info() {
   return (

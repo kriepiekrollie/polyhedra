@@ -46,9 +46,9 @@ function Navbar({ hidden }) {
     <nav className={hidden ? "hidden" : ""}>
       <div className="navTreeContainer">
         <NavTree>
-          <NavTree elem={<Link><h2>polyhedra</h2></Link>}>
+          <NavTree elem={<h2>polyhedra</h2>}>
 
-            <NavTree elem={<Link><h3>platonic solids</h3></Link>}>
+            <NavTree elem={<h3>platonic solids</h3>}>
 
               <NavTree elem={<Link to="/shape/tetrahedron"><h4>tetrahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/hexahedron"><h4>hexahedron</h4></Link>} />
@@ -58,7 +58,7 @@ function Navbar({ hidden }) {
 
             </NavTree>
 
-            <NavTree elem={<Link><h3>archimedean solids</h3></Link>}>
+            <NavTree elem={<h3>archimedean solids</h3>}>
 
               <NavTree elem={<Link to="/shape/cuboctahedron"><h4>cuboctahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/icosidodecahedron"><h4>icosidodecahedron</h4></Link>} />
@@ -80,7 +80,7 @@ function Navbar({ hidden }) {
 
             </NavTree>
 
-            <NavTree elem={<Link><h3>catalan solids</h3></Link>}>
+            <NavTree elem={<h3>catalan solids</h3>}>
 
               <NavTree elem={<Link to="/shape/rhombic_dodecahedron"><h4>rhombic dodecahedron</h4></Link>} />
               <NavTree elem={<Link to="/shape/rhombic_triacontahedron"><h4>rhombic triacontahedron</h4></Link>} />
@@ -99,6 +99,26 @@ function Navbar({ hidden }) {
 
               <NavTree elem={<Link to="/wip"><h4>pentagonal icositetrahedron</h4></Link>} />
               <NavTree elem={<Link to="/wip"><h4>pentagonal hexecontahedron</h4></Link>} />
+
+            </NavTree>
+
+          </NavTree>
+          
+          <NavTree elem={<h2>Sliders</h2>}>
+
+            <NavTree elem={<h3>Truncation</h3>}>
+
+              <NavTree elem={<Link to="/slider/truncate_tetrahedron"><h4>tetrahedron</h4></Link>} />
+              <NavTree elem={<Link to="/slider/truncate_hexahedron_octahedron"><h4>hexahedron - octahedron</h4></Link>} />
+              <NavTree elem={<Link to="/slider/truncate_dodecahedron_icosahedron"><h4>dodecahedron - octahedron</h4></Link>} />
+
+            </NavTree>
+
+            <NavTree elem={<h3>Kleetopification</h3>}>
+
+              <NavTree elem={<Link to="/slider/kleetopify_tetrahedron"><h4>tetrahedron</h4></Link>} />
+              <NavTree elem={<Link to="/slider/kleetopify_hexahedron_octahedron"><h4>hexahedron - octahedron</h4></Link>} />
+              <NavTree elem={<Link to="/slider/kleetopify_dodecahedron_icosahedron"><h4>dodecahedron - octahedron</h4></Link>} />
 
             </NavTree>
 

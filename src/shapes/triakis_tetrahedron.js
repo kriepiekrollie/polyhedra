@@ -1,7 +1,7 @@
 import Tetrahedron from "./tetrahedron.js";
-import { kleetopify } from "./ShapeInterpolaters.js";
+import { Kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = kleetopify(Tetrahedron, 9.0 / 5.0);
+export const shapeObject = Kleetopify(Tetrahedron, 9.0 / 5.0);
 
 export function Info() {
   return (

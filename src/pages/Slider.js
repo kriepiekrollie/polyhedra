@@ -1,46 +1,74 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import ShapeRenderer from "../shapes/ShapeRenderer.js";
-import * as PlatonicSolids from "../shapes/PlatonicSolids.js";
-import * as CatalanSolids from "../shapes/CatalanSolids.js";
-import * as ArchimedeanSolids from "../shapes/ArchimedeanSolids.js"
-import * as KeplerPoinsotSolids from "../shapes/KeplerPoinsotSolids.js"
-import * as Interp from "../shapes/ShapeInterpolaters.js"
-import "./Playground.css";
+import { Truncate, Kleetopify, Dodecahedron_Icosahedron } from "../shapes/ShapeInterpolaters.js"
+import "./styles.css";
 
-const getSize = (width, height) => (width > 900 ? Math.min(0.8 * width, height) : Math.min(width, 0.9 * height));
+/* Platonic Solids */
+import Hexahedron from "../shapes/hexahedron.js";
+import Octahedron from "../shapes/octahedron.js";
+import Dodecahedron from "../shapes/dodecahedron.js";
+import Icosahedron from "../shapes/icosahedron.js";
+import Tetrahedron from "../shapes/tetrahedron.js";
+
+function getInterpolater(slider) {
+  switch (slider) {
+    case "truncate_tetrahedron":
+      return (t) => Truncate(Tetrahedron, t)
+    case "truncate_hexahedron_octahedron":
+      return (t) => (t < 0.5 ? Truncate(Hexahedron, 2 * t) : Truncate(Octahedron, 2 * (1 - t)));
+    case "truncate_dodecahedron_icosahedron":
+      return (t) => (t < 0.5 ? Truncate(Dodecahedron, 2 * t) : Truncate(Icosahedron, 2 * (1 - t)));
+    case "kleetopify_tetrahedron":
+      return (t) => Kleetopify(Tetrahedron, 1 + 2 * t)
+    case "kleetopify_hexahedron_octahedron":
+      return (t) => (t < 0.5 ? Kleetopify(Hexahedron, 1 + 2 * t) : Kleetopify(Octahedron, 1 + (1 - t)));
+      // return (t) => (t < 0.5 ? Kleetopify(Hexahedron, 1 + 2 * t) : Kleetopify(Octahedron, 1 + 2 * (1 - t)));
+    case "kleetopify_dodecahedron_icosahedron":
+      return Dodecahedron_Icosahedron;
+    default:
+      return (t) => Truncate(Tetrahedron, t)
+  }
+}
 
 export default function Slider() {
-  const [shape, setShape] = useState(PlatonicSolids.DODECAHEDRON);
+  const routeParams = useParams();
+
+  const Interpolater = getInterpolater(routeParams.slider);
+  const [shapeObject, setShape] = useState(Interpolater(0));
+  const [wireframe, setWireframe] = useState(false);
+
   const slider = useRef(null);
-  const [size, setSize] = useState(getSize(window.innerWidth, window.innerHeight));
-
-  const handleResize = () => {
-    setSize(getSize(window.innerWidth, window.innerHeight));
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    console.log(PlatonicSolids.ICOSAHEDRON);
-    return (() => {
-      window.removeEventListener('resize', handleResize);
-    });
-  });
-
   useEffect(() => {
     slider.current.value = 0;
-  }, []);
+    setShape(Interpolater(0));
+  }, [routeParams.slider]);
 
   const handleSliderChange = (event) => {
-    setShape(Interp.Dodecahedron_Icosahedron(slider.current.value / 100));
+    setShape(Interpolater(slider.current.value / 100));
   };
 
   return (
-    <>
-      <input ref={slider} className="slider" type="range" min="0" max="100" onChange={handleSliderChange} />
-      <div className="slider-article">
-        <ShapeRenderer width={size} height={size} shape={shape} wireframe={false} />
-        <p>Yeah, I'm just putting the slider on top of the thing</p>
+    <section>
+      <div className="sectionContent">
+        <ShapeRenderer shape={shapeObject} wireframeMode={wireframe} />
+        <div className="sectionText">
+          <input ref={slider} className="slider" type="range" min="0" max="100" onChange={handleSliderChange} />
+          <div className="WireframeToggle" onClick={() => setWireframe(!wireframe)}> 
+            {
+              wireframe ? (
+              <span className="material-symbols-outlined">
+                check_box
+              </span> ) : (
+              <span className="material-symbols-outlined">
+                check_box_outline_blank
+              </span>
+              )
+            } 
+            <div>wireframe mode</div>
+          </div>
+        </div>
       </div>
-    </>
+    </section>
   );
 }

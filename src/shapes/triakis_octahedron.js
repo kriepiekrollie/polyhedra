@@ -1,7 +1,7 @@
 import Octahedron from "./octahedron.js"
-import { kleetopify } from "./ShapeInterpolaters.js";
+import { Kleetopify } from "./ShapeInterpolaters.js";
 
-export const shapeObject = kleetopify(Octahedron, (Math.sqrt(2) - 1) * 3);
+export const shapeObject = Kleetopify(Octahedron, (Math.sqrt(2) - 1) * 3);
 
 export function Info() {
   return (
