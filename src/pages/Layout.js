@@ -110,7 +110,7 @@ function Navbar({ hidden }) {
 
               <NavTree elem={<Link to="/slider/truncate_tetrahedron"><h4>tetrahedron</h4></Link>} />
               <NavTree elem={<Link to="/slider/truncate_hexahedron_octahedron"><h4>hexahedron - octahedron</h4></Link>} />
-              <NavTree elem={<Link to="/slider/truncate_dodecahedron_icosahedron"><h4>dodecahedron - octahedron</h4></Link>} />
+              <NavTree elem={<Link to="/slider/truncate_dodecahedron_icosahedron"><h4>dodecahedron - icosahedron</h4></Link>} />
 
             </NavTree>
 
@@ -118,7 +118,7 @@ function Navbar({ hidden }) {
 
               <NavTree elem={<Link to="/slider/kleetopify_tetrahedron"><h4>tetrahedron</h4></Link>} />
               <NavTree elem={<Link to="/slider/kleetopify_hexahedron_octahedron"><h4>hexahedron - octahedron</h4></Link>} />
-              <NavTree elem={<Link to="/slider/kleetopify_dodecahedron_icosahedron"><h4>dodecahedron - octahedron</h4></Link>} />
+              <NavTree elem={<Link to="/slider/kleetopify_dodecahedron_icosahedron"><h4>dodecahedron - icosahedron</h4></Link>} />
 
             </NavTree>
 
